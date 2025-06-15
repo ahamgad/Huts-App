@@ -9,37 +9,17 @@ function trackEvent(eventName, eventParams) {
   }
 }
 
-// --- UTILITY FUNCTIONS ---
-/**
- * Throttle function to limit the rate at which a function gets called.
- * This is better for scroll events than debounce.
- * @param {Function} func The function to throttle.
- * @param {number} limit The throttle limit in milliseconds.
- */
-function throttle(func, limit) {
-  let inThrottle;
-  return function (...args) {
-    const context = this;
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-}
-
-
 // --- GLOBAL VARIABLES ---
 let userLang = localStorage.getItem("preferredLanguage") || (navigator.language.startsWith("ar") ? "ar" : "en");
 let allTranslations = {};
 let isProgrammaticScroll = false;
 let scrollTimeout;
-
+let intersectionObserver = null; // We will use it again, but only for desktop.
 
 // --- CORE FUNCTIONS ---
 
 function loadDynamicForm(formType) {
-  // ... (This function remains unchanged)
+  // This function remains unchanged
   if (typeof userLang === "undefined") {
     setTimeout(() => loadDynamicForm(formType), 50);
     return;
@@ -70,7 +50,7 @@ function loadDynamicForm(formType) {
 }
 
 function initIframeSkeletons() {
-  // ... (This function remains unchanged)
+  // This function remains unchanged
   document.querySelectorAll(".iframe-container").forEach(container => {
     const iframe = container.querySelector("iframe");
     if (iframe && iframe.dataset.src) {
@@ -80,51 +60,55 @@ function initIframeSkeletons() {
   });
 }
 
+/**
+ * This is the original, working version of setActiveTab.
+ * It will be used by the scroll spy on DESKTOP ONLY.
+ */
 function setActiveTab(catId) {
-  // ... (This function remains unchanged)
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
   const activeBtn = document.querySelector(`.tab-btn[data-cat="${catId}"]`);
   if (activeBtn) {
     activeBtn.classList.add("active");
+    // This scrollIntoView works fine on desktop and is desired.
     activeBtn.scrollIntoView({ behavior: "auto", inline: "center", block: "nearest" });
   }
 }
 
-// --- NEW SCROLL HANDLING LOGIC (REPLACES initScrollSpy) ---
-function initScrollHandler() {
+/**
+ * The original IntersectionObserver logic that works perfectly on desktop.
+ */
+function initScrollSpy() {
   const container = document.querySelector(".menu-content");
   if (!container) return;
-
+  if (intersectionObserver) intersectionObserver.disconnect();
   const sections = document.querySelectorAll(".category-section");
   if (sections.length === 0) return;
 
   const tabsContainer = document.querySelector(".menu-tabs");
-  const topOffset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 10;
-
-  const handleScroll = () => {
-    // If a programmatic scroll is happening, do nothing.
-    if (isProgrammaticScroll) return;
-
-    let currentSectionId = sections[0].id;
-
-    // Find which section is currently at the top of the viewport
-    sections.forEach(section => {
-      const sectionTop = section.getBoundingClientRect().top;
-      if (sectionTop <= topOffset) {
-        currentSectionId = section.id;
-      }
-    });
-
-    setActiveTab(currentSectionId);
+  const topOffset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 5;
+  const observerOptions = {
+    root: container,
+    rootMargin: `-${topOffset}px 0px -85% 0px`,
+    threshold: 0,
   };
 
-  // Use the throttle utility to prevent the function from firing too often
-  const throttledHandleScroll = throttle(handleScroll, 100);
-  container.addEventListener('scroll', throttledHandleScroll);
+  intersectionObserver = new IntersectionObserver(entries => {
+    if (isProgrammaticScroll) return;
+
+    const intersectingEntries = entries.filter(e => e.isIntersecting);
+    if (intersectingEntries.length > 0) {
+      const activeEntry = intersectingEntries[intersectingEntries.length - 1];
+      setActiveTab(activeEntry.target.id);
+    }
+  }, observerOptions);
+
+  sections.forEach(section => intersectionObserver.observe(section));
 }
-// --- END OF NEW SCROLL HANDLING LOGIC ---
 
-
+/**
+ * This function is now ONLY for mobile, to ensure manual scrolls
+ * don't get blocked by the programmatic scroll flag.
+ */
 function initManualScrollDetection() {
   const container = document.querySelector(".menu-content");
   if (!container) return;
@@ -134,7 +118,6 @@ function initManualScrollDetection() {
 }
 
 function includeHTML() {
-  // ... (This function remains unchanged)
   const includeEls = Array.from(document.querySelectorAll("[data-include]"));
   return Promise.all(
     includeEls.map(el =>
@@ -147,7 +130,6 @@ function includeHTML() {
 }
 
 function applyTranslations() {
-  // ... (This function remains unchanged)
   const dict = allTranslations[userLang] || {};
   document.querySelectorAll("[data-i18n-key]").forEach(el => {
     const key = el.getAttribute("data-i18n-key");
@@ -156,13 +138,11 @@ function applyTranslations() {
 }
 
 function applyDirection() {
-  // ... (This function remains unchanged)
   document.documentElement.lang = userLang;
   document.documentElement.dir = userLang === "ar" ? "rtl" : "ltr";
 }
 
 function initLanguageToggle() {
-  // ... (This function remains unchanged)
   const btn = document.getElementById("lang-toggle");
   if (!btn) return;
   btn.innerHTML = userLang === "ar" ? "English" : "العربية";
@@ -181,7 +161,6 @@ function initLanguageToggle() {
 }
 
 function initMenuToggle() {
-  // ... (This function remains unchanged)
   const menuToggle = document.querySelector(".menu-toggle");
   const sideMenu = document.querySelector(".side-menu");
   const closeBtn = document.querySelector(".close-menu");
@@ -206,7 +185,6 @@ function initMenuToggle() {
 }
 
 function highlightActiveMenu() {
-  // ... (This function remains unchanged)
   const page = window.location.pathname.split("/").pop() || "index.html";
   const menuPages = ["menu.html", "offers.html"];
   const gamesPages = ["games.html", "mission.html", "spinner.html"];
@@ -225,7 +203,6 @@ function highlightActiveMenu() {
 
 const copyButtons = document.querySelectorAll(".copy-button");
 copyButtons.forEach(button => {
-  // ... (This function remains unchanged)
   button.addEventListener("click", function (event) {
     event.preventDefault();
     const textToCopy = this.querySelector(".text-to-copy").innerText;
@@ -255,19 +232,27 @@ window.addEventListener("DOMContentLoaded", () => {
     initMenuToggle();
     initIframeSkeletons();
 
-    // Initialize scroll-related functions for the menu page
+    // --- FINAL CONDITIONAL LOGIC ---
     if (document.querySelector(".menu-content")) {
-      // THE NEW LOGIC IS CALLED HERE, REPLACING initScrollSpy
-      initScrollHandler();
-      initManualScrollDetection();
-    }
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    // Load menu data if the function exists
+      initManualScrollDetection(); // Needed for both to handle programmatic scroll flag
+
+      if (isTouchDevice) {
+        // ON MOBILE: We DO NOT run initScrollSpy() to prevent the jumpy scroll bug.
+        // The tabs will only update on click, but scrolling will be smooth.
+        console.log("Touch device detected. Scroll spy disabled for smooth scrolling.");
+      } else {
+        // ON DESKTOP: We run the fully-featured scroll spy because it works perfectly.
+        initScrollSpy();
+      }
+    }
+    // --- END OF FINAL LOGIC ---
+
     if (typeof loadMenuData === "function") {
       loadMenuData();
     }
 
-    // Load dynamic forms if their wrappers exist
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
   });
