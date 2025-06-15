@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff">
-    <!-- Google Analytics 4 (gtag.js) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PDZYFK0P93"></script>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+  <!-- Google Analytics 4 (gtag.js) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PDZYFK0P93"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
@@ -13,100 +14,83 @@
     gtag('config', 'G-PDZYFK0P93', { 'allow_ad_personalization_signals': true });
   </script> -->
 
-    <!-- CSS variables & main stylesheet -->
-    <link rel="stylesheet" href="assets/css/variables.css" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
-    <!-- Icon library -->
-    <link
-      rel="stylesheet"
-      href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css"
-    />
-    <!-- Page title -->
-    <title>Support Hut</title>
-    <link
-      rel="icon"
-      href="assets/images/favicon.svg"
-      type="image/svg"
-      sizes="32x32"
-    />
-  </head>
-  <body>
-    <!-- include shared header (nav & mobile menu only) -->
-    <div data-include="partials/header.html"></div>
+  <!-- CSS variables & main stylesheet -->
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <!-- Icon library -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" />
+  <!-- Page title -->
+  <title>Support Hut</title>
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg" sizes="32x32" />
+</head>
 
-    <!-- page-specific content here -->
-    <div data-include="partials/desktop.html"></div>
-    <div class="main-container">
-      <div class="main-content description about">
-        <h1 data-i18n-key="supportHeader" class="page-header"></h1>
-        <p data-i18n-key="supportDescription" class="page-description"></p><a
-            href="https://ipn.eg/S/aaib.ahamgad/instapay/6NJz0B"
-            target="_blank"
-            onclick="trackEvent('CTA_Click', { cta_name: 'InstaPay' })"
-            class="sec-btn"
-          >
-            
-            <span data-i18n-key="sendSupport"></span>
-            <div class="img">
-              <img
-                src="assets/images/instapay(en).svg"
-                alt="InstaPay"
-                class="lang-img img-en"
-              />
-              <img
-                src="assets/images/instapay(ar).svg"
-                alt="InstaPay"
-                class="lang-img img-ar"
-              />
-            </div>
-          </a>
+<body>
+  <!-- include shared header (nav & mobile menu only) -->
+  <div data-include="partials/header.html"></div>
+
+  <!-- page-specific content here -->
+  <div data-include="partials/desktop.html"></div>
+  <div class="main-container">
+    <div class="main-content description about">
+      <h1 data-i18n-key="supportHeader" class="page-header"></h1>
+      <p data-i18n-key="supportDescription" class="page-description"></p><a
+        href="https://ipn.eg/S/aaib.ahamgad/instapay/6NJz0B" target="_blank"
+        onclick="trackEvent('CTA_Click', { cta_name: 'InstaPay' })" class="sec-btn">
+
+        <span data-i18n-key="sendSupport"></span>
+        <div class="img">
+          <img src="assets/images/instapay(en).svg" alt="InstaPay" class="lang-img img-en" />
+          <img src="assets/images/instapay(ar).svg" alt="InstaPay" class="lang-img img-ar" />
+        </div>
+      </a>
+    </div>
+    <div class="main-content">
+      <h1 data-i18n-key="bankAccountTitle" class="page-sub-header"></h1>
+      <div data-i18n-key="clickCopy" class="hint"></div>
+      <div class="content-container">
+        <h3 data-i18n-key="IBAN-Number" class="content-label"></h3>
+        <a class="copy-button enBank">
+          <span class="text-to-copy">EG950010015600000100060521292</span>
+          <i class="fi fi-rr-duplicate icon-copy"></i>
+          <i class="fi fi-rr-check icon-success"></i>
+        </a>
       </div>
-      <div class="main-content">
-        <h1 data-i18n-key="bankAccountTitle" class="page-sub-header"></h1>
-          <div data-i18n-key="clickCopy" class="hint"></div>
-        <div class="content-container">
-          <h3 data-i18n-key="IBAN-Number" class="content-label"></h3>
-          <a class="copy-button enBank">
-            <span class="text-to-copy">EG950010015600000100060521292</span>
-            <i class="fi fi-rr-duplicate icon-copy"></i>
-            <i class="fi fi-rr-check icon-success"></i>
-          </a>
-        </div>
-        <div class="content-container">
-          <h3 data-i18n-key="Swift-Code" class="content-label"></h3>
-          <a class="copy-button enBank">
-            <span class="text-to-copy">CIBEEGCX</span>
-            <i class="fi fi-rr-duplicate icon-copy"></i>
-            <i class="fi fi-rr-check icon-success"></i>
-          </a>
-        </div>
-        <div class="content-container">
-          <h3 data-i18n-key="Account-Number" class="content-label"></h3>
-          <a class="copy-button enBank">
-            <span class="text-to-copy">100060521292</span>
-            <i class="fi fi-rr-duplicate icon-copy"></i>
-            <i class="fi fi-rr-check icon-success"></i>
-          </a>
-        </div>
-        <div class="content-container">
-          <h3 data-i18n-key="Account-Description" class="content-label"></h3>
-          <a class="copy-button enBank">
-            <span class="text-to-copy">COFFEE HUT-AMGAD AHMED ABDEL LATIF</span>
-            <i class="fi fi-rr-duplicate icon-copy"></i>
-            <i class="fi fi-rr-check icon-success"></i>
-          </a>
-        </div>
-        <div class="content-container">
-          <h3 data-i18n-key="Bank-Name" class="content-label"></h3>
-          <a class="copy-button enBank">
-            <span class="text-to-copy">Commercial International Bank Egypt (CIB)</span>
-            <i class="fi fi-rr-duplicate icon-copy"></i>
-            <i class="fi fi-rr-check icon-success"></i>
-          </a>
-        </div>
+      <div class="content-container">
+        <h3 data-i18n-key="Swift-Code" class="content-label"></h3>
+        <a class="copy-button enBank">
+          <span class="text-to-copy">CIBEEGCX</span>
+          <i class="fi fi-rr-duplicate icon-copy"></i>
+          <i class="fi fi-rr-check icon-success"></i>
+        </a>
       </div>
+      <div class="content-container">
+        <h3 data-i18n-key="Account-Number" class="content-label"></h3>
+        <a class="copy-button enBank">
+          <span class="text-to-copy">100060521292</span>
+          <i class="fi fi-rr-duplicate icon-copy"></i>
+          <i class="fi fi-rr-check icon-success"></i>
+        </a>
+      </div>
+      <div class="content-container">
+        <h3 data-i18n-key="Account-Description" class="content-label"></h3>
+        <a class="copy-button enBank">
+          <span class="text-to-copy">COFFEE HUT-AMGAD AHMED ABDEL LATIF</span>
+          <i class="fi fi-rr-duplicate icon-copy"></i>
+          <i class="fi fi-rr-check icon-success"></i>
+        </a>
+      </div>
+      <div class="content-container">
+        <h3 data-i18n-key="Bank-Name" class="content-label"></h3>
+        <a class="copy-button enBank">
+          <span class="text-to-copy">Commercial International Bank Egypt (CIB)</span>
+          <i class="fi fi-rr-duplicate icon-copy"></i>
+          <i class="fi fi-rr-check icon-success"></i>
+        </a>
+      </div>
+    </div>
 
     <!-- Main JavaScript -->
     <script src="assets/js/scripts.js" defer></script>
-  </body>
+</body>
+
 </html>

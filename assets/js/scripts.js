@@ -163,22 +163,44 @@ function initMenuToggle() {
   const menuToggle = document.querySelector(".menu-toggle");
   const sideMenu = document.querySelector(".side-menu");
   const closeBtn = document.querySelector(".close-menu");
+
+  // --- جديد: استهداف الميتا تاج عن طريق الـ ID ---
+  const themeColorMeta = document.getElementById('theme-color-meta');
+
   if (!menuToggle || !sideMenu || !closeBtn) return;
+
+  // عند فتح القائمة
   menuToggle.addEventListener("click", () => {
     sideMenu.classList.add("open");
+    // --- جديد: تغيير اللون إلى لون القائمة ---
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute('content', '#f8f9fa');
+    }
     trackEvent("Menu_Toggle", { action: "open" });
   });
+
+  // عند الضغط على زر الإغلاق
   closeBtn.addEventListener("click", () => {
     sideMenu.classList.remove("open");
+    // --- جديد: إعادة اللون إلى الأبيض ---
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute('content', '#ffffff');
+    }
     trackEvent("Menu_Toggle", { action: "close" });
   });
-  document.addEventListener("click", e => {
+
+  // عند الضغط خارج القائمة لإغلاقها
+  document.addEventListener("click", (e) => {
     if (
       sideMenu.classList.contains("open") &&
       !sideMenu.contains(e.target) &&
       !menuToggle.contains(e.target)
     ) {
       sideMenu.classList.remove("open");
+      // --- جديد: إعادة اللون إلى الأبيض هنا أيضاً ---
+      if (themeColorMeta) {
+        themeColorMeta.setAttribute('content', '#ffffff');
+      }
     }
   });
 }

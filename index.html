@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff">
-    <!-- Google Analytics 4 (gtag.js) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PDZYFK0P93"></script>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+  <!-- Google Analytics 4 (gtag.js) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PDZYFK0P93"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
@@ -13,65 +14,59 @@
     gtag('config', 'G-PDZYFK0P93', { 'allow_ad_personalization_signals': true });
   </script> -->
 
-    <!-- CSS variables & main stylesheet -->
-    <link rel="stylesheet" href="assets/css/variables.css" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
-    <!-- Icon library -->
-    <link
-      rel="stylesheet"
-      href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css"
-    />
-    <!-- Page title -->
-    <title>Coffee Hut</title>
-    <link
-      rel="icon"
-      href="assets/images/favicon.svg"
-      type="image/svg"
-      sizes="32x32"
-    />
-  </head>
-  <body>
-    <!-- include shared header (nav & mobile menu only) -->
-    <div data-include="partials/header.html"></div>
+  <!-- CSS variables & main stylesheet -->
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <!-- Icon library -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" />
+  <!-- Page title -->
+  <title>Coffee Hut</title>
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg" sizes="32x32" />
+</head>
 
-    <!-- page-specific content here -->
-    <div data-include="partials/desktop.html"></div>
+<body>
+  <!-- include shared header (nav & mobile menu only) -->
+  <div data-include="partials/header.html"></div>
 
-    <div class="home-content">
-      <h1 data-i18n-key="homeHeader"></h1>
-      <div class="container">
-        <a href="menu.html" class="home-button menu">
-          <img src="assets/images/menu.svg" alt="Menu Hut" />
-          <span data-i18n-key="navMenu">Menu</span>
-        </a>
-        <a href="feedback.html" class="home-button feedback small">
-          <img src="assets/images/feedback.svg" alt="Feedback Hut" />
-          <span data-i18n-key="navFeedback"></span>
-        </a>
-      </div>
-      <div class="container">
-        <a href="events.html" class="home-button events small">
-          <img src="assets/images/events.svg" alt="Events Hut" />
-          <span data-i18n-key="navEvents"></span>
-        </a>
-        <a href="games.html" class="home-button games">
-          <img src="assets/images/games.svg" alt="Games Hut" />
-          <span data-i18n-key="navGames"></span>
-        </a>
-      </div>
-      <div class="container">
-        <a href="support.html" class="home-button support">
-          <img src="assets/images/support.svg" alt="Support Hut" />
-          <span data-i18n-key="navSupport"></span>
-        </a>
-        <a href="about.html" class="home-button contact small">
-          <img src="assets/images/about.svg" alt="About Hut" />
-          <span data-i18n-key="navAbout"></span>
-        </a>
-      </div>
+  <!-- page-specific content here -->
+  <div data-include="partials/desktop.html"></div>
+
+  <div class="home-content">
+    <h1 data-i18n-key="homeHeader"></h1>
+    <div class="container">
+      <a href="menu.html" class="home-button menu">
+        <img src="assets/images/menu.svg" alt="Menu Hut" />
+        <span data-i18n-key="navMenu">Menu</span>
+      </a>
+      <a href="feedback.html" class="home-button feedback small">
+        <img src="assets/images/feedback.svg" alt="Feedback Hut" />
+        <span data-i18n-key="navFeedback"></span>
+      </a>
     </div>
+    <div class="container">
+      <a href="events.html" class="home-button events small">
+        <img src="assets/images/events.svg" alt="Events Hut" />
+        <span data-i18n-key="navEvents"></span>
+      </a>
+      <a href="games.html" class="home-button games">
+        <img src="assets/images/games.svg" alt="Games Hut" />
+        <span data-i18n-key="navGames"></span>
+      </a>
+    </div>
+    <div class="container">
+      <a href="support.html" class="home-button support">
+        <img src="assets/images/support.svg" alt="Support Hut" />
+        <span data-i18n-key="navSupport"></span>
+      </a>
+      <a href="about.html" class="home-button contact small">
+        <img src="assets/images/about.svg" alt="About Hut" />
+        <span data-i18n-key="navAbout"></span>
+      </a>
+    </div>
+  </div>
 
-    <!-- Main JavaScript -->
-    <script src="assets/js/scripts.js" defer></script>
-  </body>
+  <!-- Main JavaScript -->
+  <script src="assets/js/scripts.js" defer></script>
+</body>
+
 </html>

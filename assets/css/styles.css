@@ -194,6 +194,7 @@ i {
   padding: var(--cta-padding);
   border-radius: var(--cta-radius);
   line-height: inherit;
+  background: var(--bg-primary);
   i {
     display: flex;
   }
@@ -401,12 +402,13 @@ html[dir="rtl"] .flippable-image {
   font-family: var(--cta-font-family);
   font-size: 0.875rem;
   cursor: pointer;
+  line-height: 1.6;
 }
 .tab-btn.active {
   color: var(--color-primary-300);
-  border: solid 1px var(--color-primary-300);
+  /* border: solid 1px var(--color-primary-300); */
   border-radius: var(--radius-medium);
-  background-color: var(--bg-primary);
+  background-color: var(--color-primary-300-G);
   margin: 0 8px;
 }
 .tab-btn:first-child {
@@ -840,6 +842,16 @@ html[dir="rtl"] .flippable-image {
 @media (max-width: 800px) {
   html {
     font-size: 1.0625rem;
+  }
+  .menu-page-header .site-header {
+    border-bottom: 0;
+  }
+  .menu-tabs {
+    width: calc(100% + var(--body-padding-medium) * 2);
+    margin: 0 calc(-1 * var(--body-padding-medium));
+    border-bottom: var(--border-style);
+    background-color: var(--bg-primary);
+    padding: 0 var(--body-padding-medium) 8px;
   }
   .site-header .container {
     padding: 0 var(--body-padding-medium);

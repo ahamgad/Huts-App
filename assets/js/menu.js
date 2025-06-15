@@ -101,13 +101,27 @@ function renderTabs(data) {
       const categoryId = e.currentTarget.href.split('#')[1];
 
       if (isTouchDevice) {
-        // --- MOBILE BEHAVIOR: Instant Jump ---
+        // --- MOBILE BEHAVIOR: Instant Jump with Offset ---
         const section = document.getElementById(categoryId);
-        if (section) {
-          // Manually set the flag to avoid scroll spy firing
+        const container = document.querySelector('.menu-content');
+        const tabsContainer = document.querySelector('.menu-tabs');
+
+        if (section && container) {
+          // Calculate the offset (height of the sticky tabs bar)
+          const offset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 20;
+
+          // Calculate the target scroll position by subtracting the offset
+          const targetY = section.offsetTop - offset;
+
           isProgrammaticScroll = true;
           setActiveTab(categoryId);
-          section.scrollIntoView({ behavior: "auto" }); // Instant jump
+
+          // Use scrollTo for precise positioning with an instant jump
+          container.scrollTo({
+            top: targetY,
+            behavior: "auto"
+          });
+
           // Reset the flag after a short delay
           setTimeout(() => { isProgrammaticScroll = false; }, 300);
         }
@@ -165,7 +179,7 @@ function scrollToCategory(catId) {
   setActiveTab(catId);
 
   const tabsContainer = document.querySelector(".menu-tabs");
-  const offset = tabsContainer ? tabsContainer.offsetHeight : 50;
+  const offset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 20;
   const targetY = section.offsetTop - offset;
 
   container.scrollTo({
