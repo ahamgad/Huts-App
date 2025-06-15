@@ -12,9 +12,9 @@ function trackEvent(eventName, eventParams) {
 // --- GLOBAL VARIABLES ---
 let userLang = localStorage.getItem("preferredLanguage") || (navigator.language.startsWith("ar") ? "ar" : "en");
 let allTranslations = {};
-let isProgrammaticScroll = false;
+let isProgrammaticScroll = false; // We need this flag again
 let scrollTimeout;
-let intersectionObserver = null; // We will use it again, but only for desktop.
+let intersectionObserver = null;
 
 // --- CORE FUNCTIONS ---
 
@@ -61,26 +61,25 @@ function initIframeSkeletons() {
 }
 
 /**
- * This is the original, working version of setActiveTab.
- * It will be used by the scroll spy on DESKTOP ONLY.
+ * Sets the active tab and scrolls the horizontal tab bar.
  */
 function setActiveTab(catId) {
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-  const activeBtn = document.querySelector(`.tab-btn[data-cat="${catId}"]`);
+  const activeBtn = document.querySelector(`a.tab-btn[href="#${catId}"]`);
   if (activeBtn) {
     activeBtn.classList.add("active");
-    // This scrollIntoView works fine on desktop and is desired.
     activeBtn.scrollIntoView({ behavior: "auto", inline: "center", block: "nearest" });
   }
 }
 
 /**
- * The original IntersectionObserver logic that works perfectly on desktop.
+ * Initializes the IntersectionObserver scroll spy. It now works for both platforms.
  */
 function initScrollSpy() {
   const container = document.querySelector(".menu-content");
   if (!container) return;
   if (intersectionObserver) intersectionObserver.disconnect();
+
   const sections = document.querySelectorAll(".category-section");
   if (sections.length === 0) return;
 
@@ -106,8 +105,7 @@ function initScrollSpy() {
 }
 
 /**
- * This function is now ONLY for mobile, to ensure manual scrolls
- * don't get blocked by the programmatic scroll flag.
+ * Detects manual user scroll to reset the programmatic scroll flag.
  */
 function initManualScrollDetection() {
   const container = document.querySelector(".menu-content");
@@ -116,6 +114,7 @@ function initManualScrollDetection() {
   container.addEventListener('wheel', handleManualScroll, { passive: true });
   container.addEventListener('touchstart', handleManualScroll, { passive: true });
 }
+
 
 function includeHTML() {
   const includeEls = Array.from(document.querySelectorAll("[data-include]"));
@@ -232,22 +231,11 @@ window.addEventListener("DOMContentLoaded", () => {
     initMenuToggle();
     initIframeSkeletons();
 
-    // --- FINAL CONDITIONAL LOGIC ---
+    // Initialize scroll-related functions if on the menu page
     if (document.querySelector(".menu-content")) {
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-      initManualScrollDetection(); // Needed for both to handle programmatic scroll flag
-
-      if (isTouchDevice) {
-        // ON MOBILE: We DO NOT run initScrollSpy() to prevent the jumpy scroll bug.
-        // The tabs will only update on click, but scrolling will be smooth.
-        console.log("Touch device detected. Scroll spy disabled for smooth scrolling.");
-      } else {
-        // ON DESKTOP: We run the fully-featured scroll spy because it works perfectly.
-        initScrollSpy();
-      }
+      initScrollSpy();
+      initManualScrollDetection();
     }
-    // --- END OF FINAL LOGIC ---
 
     if (typeof loadMenuData === "function") {
       loadMenuData();
