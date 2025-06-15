@@ -113,9 +113,10 @@ function setActiveTab(catId) {
   const activeBtn = document.querySelector(`.tab-btn[data-cat="${catId}"]`);
   if (activeBtn) {
     activeBtn.classList.add("active");
-    // Scroll the tab itself into the horizontal view so it's visible.
+
+    // The scrollIntoView is back, but with 'auto' behavior to prevent conflict.
     activeBtn.scrollIntoView({
-      behavior: "smooth",
+      behavior: "auto", // Changed from "smooth" to "auto"
       inline: "center",
       block: "nearest",
     });
@@ -248,14 +249,28 @@ function initMenuToggle() {
 }
 
 function highlightActiveMenu() {
+  // 1. الحصول على اسم الصفحة الحالية
   const page = window.location.pathname.split("/").pop() || "index.html";
-  const menuPages = [
-    "menu.html",
-    "mission.html",
-    "spinner.html",
-    "offers.html",
-  ];
-  const target = menuPages.includes(page) ? "menu.html" : page;
+
+  // 2. تعريف مجموعات الصفحات
+  const menuPages = ["menu.html", "offers.html"];
+  const gamesPages = ["games.html", "mission.html", "spinner.html"];
+
+  // 3. تحديد الرابط المستهدف الذي يجب أن يكون "active"
+  let target;
+
+  if (menuPages.includes(page)) {
+    // إذا كانت الصفحة الحالية ضمن مجموعة "المنيو"
+    target = "menu.html";
+  } else if (gamesPages.includes(page)) {
+    // إذا كانت الصفحة الحالية ضمن مجموعة "الألعاب"
+    target = "games.html";
+  } else {
+    // لأي صفحة أخرى، يكون الهدف هو اسم الصفحة نفسها
+    target = page;
+  }
+
+  // 4. المرور على كل الروابط في القائمة وتطبيق كلاس "active" على الرابط الصحيح
   document.querySelectorAll(".site-nav a, .side-menu a").forEach((link) => {
     link.classList.toggle("active", link.getAttribute("href") === target);
   });

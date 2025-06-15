@@ -57,7 +57,7 @@ i {
 }
 .site-header .logo-text {
   font-family: var(--font-playpen);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-black-500);
   line-height: 1;
@@ -115,7 +115,7 @@ i {
   display: none;
   margin-inline-start: 8px;
   font-family: var(--cta-font-family);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: var(--cta-font-weight);
   padding: 8px;
   border-radius: var(--cta-radius);
@@ -148,7 +148,7 @@ i {
   inset-inline-end: 40px;
   cursor: pointer;
   font-family: var(--cta-font-family);
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: var(--cta-font-weight);
   padding: 8px;
   border-radius: var(--cta-radius);
@@ -192,7 +192,7 @@ i {
   margin-top: 16px;
   color: var(--color-black-500);
   font-family: var(--cta-font-family);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 400;
 }
 
@@ -227,7 +227,7 @@ i {
 
 .site-desktop .title {
   font-family: var(--font-cairo);
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 400;
   color: var(--color-black-500);
   line-height: 1;
@@ -235,7 +235,7 @@ i {
 
 .site-desktop .description {
   font-family: var(--font-cairo);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 400;
   color: var(--color-black-400);
   text-align: center;
@@ -261,7 +261,7 @@ i {
 
 .home-content h1 {
   font-family: var(--font-playpen);
-  font-size: 42px;
+  font-size: 2.625rem;
   font-weight: 800;
   background: linear-gradient(
     45deg,
@@ -285,7 +285,7 @@ i {
   flex-direction: column;
   gap: var(--cta-gap);
   font-family: var(--cta-font-family);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   padding: 16px;
@@ -374,7 +374,7 @@ i {
   border: none;
   padding: 8px;
   font-family: var(--cta-font-family);
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
 }
 .tab-btn.active {
@@ -414,12 +414,12 @@ i {
   overflow: hidden;
 }
 .menu-page-banner a h3 {
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 800;
   text-transform: uppercase;
 }
 .menu-page-banner a h6 {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 600;
   margin-top: -8px;
   text-transform: lowercase;
@@ -467,7 +467,7 @@ i {
 }
 .category-header h2 {
   font-family: var(--font-playpen);
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 600;
 }
 .products {
@@ -490,21 +490,21 @@ i {
 .product-card h3 {
   color: var(--color-black-500);
   font-family: var(--font-cairo);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
   text-transform: uppercase;
 }
 .product-card p {
   color: var(--color-black-500);
   font-family: var(--font-cairo);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
 }
 
 .product-card p::after {
   content: "LE";
   vertical-align: super;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   margin-left: 4px;
   color: var(--color-black-400);
@@ -518,7 +518,7 @@ i {
   width: 100%;
   padding: 16px;
   font-family: var(--font-cairo);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-black-500);
 }
@@ -609,6 +609,7 @@ i {
 }
 .main-container.scrollable-container {
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0 !important;
   display: block;
 }
@@ -649,14 +650,14 @@ i {
 
 .page-header {
   font-family: var(--font-playpen);
-  font-size: 42px;
+  font-size: 2.625rem;
   font-weight: 800;
   color: var(--color-primary-400);
 }
 
 .page-sub-header {
   font-family: var(--font-cairo);
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 800;
   color: var(--color-black-500);
   line-height: 1;
@@ -670,7 +671,7 @@ i {
 .page-description {
   font-family: var(--font-cairo);
   font-weight: 400;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 28px;
 }
 
@@ -685,7 +686,7 @@ i {
 
 .content-label {
   font-family: var(--font-cairo);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-black-500);
   line-height: 1;
@@ -716,7 +717,7 @@ i {
   span {
     text-align: start;
     color: var(--color-black-500);
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 }
 
@@ -759,7 +760,7 @@ i {
 
 .copy-button.enFixed {
   text-align: start;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .copy-button .icon-copy {
   color: var(--color-primary-300);
@@ -790,7 +791,7 @@ i {
 .hint {
   color: var(--color-black-400);
   font-family: var(--font-cairo);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 400;
   line-height: 1;
 }

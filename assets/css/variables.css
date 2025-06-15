@@ -129,7 +129,7 @@
 
   /* CTAs */
   --cta-font-family: var(--font-cairo);
-  --cta-font-size: 16px;
+  --cta-font-size: 1rem;
   --cta-font-weight: 400;
   --cta-padding: 8px 16px;
   --cta-radius: var(--radius-medium);
