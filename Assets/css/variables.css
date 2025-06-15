@@ -1,0 +1,155 @@
+/* variables.css */
+
+/* ---------------------------------------------------
+   Font Faces
+   --------------------------------------------------- */
+@font-face {
+  font-family: "Cairo";
+  src: url("../fonts/Cairo-200.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("../fonts/Cairo-400.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("../fonts/Cairo-600.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("../fonts/Cairo-800.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Playpen Sans";
+  src: url("../fonts/PlaypenSans.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Playpen Sans";
+  src: url("../fonts/PlaypenSans.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Playpen Sans";
+  src: url("../fonts/PlaypenSans.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Playpen Sans";
+  src: url("../fonts/PlaypenSans.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+/* ---------------------------------------------------
+   CSS Variables: Colors & Sizes
+   --------------------------------------------------- */
+:root {
+  /* Font Families */
+  --font-cairo: "Cairo", sans-serif;
+  --font-playpen: "Playpen Sans", cursive;
+
+  /* Primary (base: #AC5FE0) */
+  --color-primary-100: #cd9fec;
+  --color-primary-200: #bc7fe6;
+  --color-primary-300: #ac5fe0;
+  --color-primary-400: #894cb3;
+  --color-primary-500: #673986;
+
+  --color-primary-300-G: rgba(172, 95, 217, 0.1);
+
+  /* Secondary (base: #5FD998) */
+  --color-secondary-100: #9fe8c1;
+  --color-secondary-200: #7fe0ad;
+  --color-secondary-300: #5fd998;
+  --color-secondary-400: #4cad79;
+  --color-secondary-500: #39825b;
+
+  --color-secondary-300-G: rgba(95, 217, 152, 0.1);
+
+  /* Blue (base: #3FA9F5) */
+  --color-blue-100: #8ccbf9;
+  --color-blue-200: #65baf7;
+  --color-blue-300: #3fa9f5;
+  --color-blue-400: #3287c4;
+  --color-blue-500: #266593;
+
+  --color-blue-300-G: rgba(63, 169, 245, 0.1);
+
+  /* Coral (base: #FF857F) */
+  --color-coral-100: #ffb6b2;
+  --color-coral-200: #ff9d99;
+  --color-coral-300: #ff857f;
+  --color-coral-400: #cc6a66;
+  --color-coral-500: #99504c;
+
+  --color-coral-300-G: rgba(255, 133, 127, 0.1);
+
+  /* Orange (base: #CC7514) */
+  --color-orange-100: #e0ac72;
+  --color-orange-200: #d69143;
+  --color-orange-300: #cc7514;
+  --color-orange-400: #a35d10;
+  --color-orange-500: #7a460c;
+
+  --color-orange-300-G: rgba(204, 117, 20, 0.1);
+
+  /* Black (background & borders) */
+  --color-black-100: white;
+  --color-black-200: #f8f9fa;
+  --color-black-300: #dde0e2;
+  --color-black-400: #5e6366;
+  --color-black-500: #252528;
+
+  --color-black-400-G: rgba(94, 99, 102, 0.1);
+
+  /* New Ui Variables */
+  --bg-primary: var(--color-black-100);
+  --bg-secondary: var(--color-black-200);
+  --border-style: solid 1px var(--color-black-300);
+  --radius-large: 16px;
+  --radius-medium: 8px;
+  --body-padding-large: 24px;
+  --body-padding-medium: 16px;
+  --bg-banners: rgba(172, 95, 217, 0.1);
+
+  /* Header Height */
+  --header-height: 64px;
+
+  /* CTAs */
+  --cta-font-family: var(--font-cairo);
+  --cta-font-size: 16px;
+  --cta-font-weight: 400;
+  --cta-padding: 8px 16px;
+  --cta-radius: var(--radius-medium);
+  --cta-gap: 8px;
+}
+
+* {
+  -ms-overflow-style: none !important; /* IE & Edge القديمة */
+  scrollbar-width: none !important; /* Firefox */
+}
+
+/* 3. إخفاء scrollbars في WebKit */
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* 4. تأكد من عدم وجود overflow زائد يفرض scrollbar */
+html,
+body {
+  overflow: auto !important;
+}
