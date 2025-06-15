@@ -373,7 +373,8 @@ html[dir="rtl"] .flippable-image {
   height: 100%;
   width: 100%;
   padding: 0 var(--body-padding-large) var(--body-padding-large);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Fixed Category Tabs (now sticky inside its parent) */
@@ -846,9 +847,12 @@ html[dir="rtl"] .flippable-image {
   .menu-page-header .site-header {
     border-bottom: 0;
   }
+  .menu-page-banner {
+    margin-top: calc(48.8px + 16px);
+  }
   .menu-tabs {
-    width: calc(100% + var(--body-padding-medium) * 2);
-    margin: 0 calc(-1 * var(--body-padding-medium));
+    position: fixed;
+    top: var(--header-height);
     border-bottom: var(--border-style);
     background-color: var(--bg-primary);
     padding: 0 var(--body-padding-medium) 8px;
