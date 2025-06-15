@@ -853,6 +853,7 @@ html[dir="rtl"] .flippable-image {
   .menu-tabs {
     position: fixed;
     top: var(--header-height);
+    inset-inline-start: 0;
     border-bottom: var(--border-style);
     background-color: var(--bg-primary);
     padding: 0 var(--body-padding-medium) 8px;
