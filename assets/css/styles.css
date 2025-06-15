@@ -226,6 +226,10 @@ i {
   height: 32px;
 }
 
+html[dir="rtl"] .flippable-image {
+  transform: scaleX(-1);
+}
+
 /* Desktop Site */
 .site-desktop {
   position: relative;
