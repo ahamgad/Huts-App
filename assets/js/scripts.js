@@ -81,7 +81,7 @@ function loadDynamicForm(formType) {
 }
 
 /**
- * NEW: Initializes skeleton loading for any iframe within a .iframe-container
+ * Initializes skeleton loading for any iframe within a .iframe-container
  * that has a data-src attribute.
  */
 function initIframeSkeletons() {
@@ -101,6 +101,7 @@ function initIframeSkeletons() {
 
 /**
  * Marks the given tab active and scrolls it into the horizontal view.
+ * This is the version that restores the original tab scrolling behavior.
  * @param {string} catId - The ID of the category to make active.
  */
 function setActiveTab(catId) {
@@ -114,9 +115,9 @@ function setActiveTab(catId) {
   if (activeBtn) {
     activeBtn.classList.add("active");
 
-    // The scrollIntoView is back, but with 'auto' behavior to prevent conflict.
+    // The scrollIntoView is back, with 'auto' behavior to prevent conflict.
     activeBtn.scrollIntoView({
-      behavior: "auto", // Changed from "smooth" to "auto"
+      behavior: "auto",
       inline: "center",
       block: "nearest",
     });
@@ -125,14 +126,12 @@ function setActiveTab(catId) {
 
 /**
  * Scroll-spy: Initializes an IntersectionObserver to watch the .category-section
- * elements and updates the active tab accordingly. This version is optimized
- * for cross-browser compatibility, especially Safari.
+ * elements and updates the active tab accordingly.
  */
 function initScrollSpy() {
   const container = document.querySelector(".menu-content");
   if (!container) return;
 
-  // Before creating a new observer, disconnect the old one if it exists.
   if (intersectionObserver) {
     intersectionObserver.disconnect();
   }
@@ -153,9 +152,7 @@ function initScrollSpy() {
     if (isProgrammaticScroll) {
       return;
     }
-
     const intersectingEntries = entries.filter((e) => e.isIntersecting);
-
     if (intersectingEntries.length > 0) {
       const activeEntry = intersectingEntries[intersectingEntries.length - 1];
       const id = activeEntry.target.id;
@@ -165,6 +162,25 @@ function initScrollSpy() {
 
   sections.forEach((section) => intersectionObserver.observe(section));
 }
+
+/**
+ * NEW: This function detects when a user starts scrolling manually and
+ * immediately resets the programmatic scroll flag.
+ */
+function initManualScrollDetection() {
+  const container = document.querySelector(".menu-content");
+  if (!container) return;
+
+  // This handler will be called the moment the user interacts.
+  const handleManualScroll = () => {
+    isProgrammaticScroll = false;
+  };
+
+  // Listen for mouse wheel or touch start to immediately cancel the flag.
+  container.addEventListener('wheel', handleManualScroll, { passive: true });
+  container.addEventListener('touchstart', handleManualScroll, { passive: true });
+}
+
 
 function includeHTML() {
   const includeEls = Array.from(document.querySelectorAll("[data-include]"));
@@ -198,28 +214,13 @@ function initLanguageToggle() {
   applyDirection();
   btn.addEventListener("click", () => {
     userLang = userLang === "en" ? "ar" : "en";
-
     localStorage.setItem("preferredLanguage", userLang);
-
     applyTranslations();
     applyDirection();
     btn.innerHTML = userLang === "ar" ? "English" : "العربية";
-
-    // Handle menu page re-render
-    if (typeof window.renderAll === "function") {
-      window.renderAll();
-    }
-
-    // Handle feedback form re-render
-    if (document.getElementById("feedback-wrapper")) {
-      loadDynamicForm("feedback");
-    }
-
-    // Handle events form re-render
-    if (document.getElementById("events-wrapper")) {
-      loadDynamicForm("events");
-    }
-
+    if (typeof window.renderAll === "function") window.renderAll();
+    if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
+    if (document.getElementById("events-wrapper")) loadDynamicForm("events");
     trackEvent("Language_Toggle", { language_to: userLang });
   });
 }
@@ -249,59 +250,34 @@ function initMenuToggle() {
 }
 
 function highlightActiveMenu() {
-  // 1. الحصول على اسم الصفحة الحالية
   const page = window.location.pathname.split("/").pop() || "index.html";
-
-  // 2. تعريف مجموعات الصفحات
   const menuPages = ["menu.html", "offers.html"];
   const gamesPages = ["games.html", "mission.html", "spinner.html"];
-
-  // 3. تحديد الرابط المستهدف الذي يجب أن يكون "active"
   let target;
-
   if (menuPages.includes(page)) {
-    // إذا كانت الصفحة الحالية ضمن مجموعة "المنيو"
     target = "menu.html";
   } else if (gamesPages.includes(page)) {
-    // إذا كانت الصفحة الحالية ضمن مجموعة "الألعاب"
     target = "games.html";
   } else {
-    // لأي صفحة أخرى، يكون الهدف هو اسم الصفحة نفسها
     target = page;
   }
-
-  // 4. المرور على كل الروابط في القائمة وتطبيق كلاس "active" على الرابط الصحيح
   document.querySelectorAll(".site-nav a, .side-menu a").forEach((link) => {
     link.classList.toggle("active", link.getAttribute("href") === target);
   });
 }
 
-// 1. استهداف "كل" الأزرار التي تحمل الكلاس
 const copyButtons = document.querySelectorAll(".copy-button");
-
-// 2. المرور على كل زر تم إيجاده باستخدام حلقة forEach
 copyButtons.forEach((button) => {
-  // 3. إضافة مستمع الأحداث (event listener) "لكل زر على حدة"
   button.addEventListener("click", function (event) {
-    // منع السلوك الافتراضي لتاج الـ <a>
     event.preventDefault();
-
-    // استهداف النص الذي نريد نسخه من داخل "هذا الزر" الذي تم النقر عليه
     const textToCopy = this.querySelector(".text-to-copy").innerText;
-
-    // استخدام واجهة المتصفح الحديثة للنسخ
     navigator.clipboard
       .writeText(textToCopy)
       .then(() => {
-        // --- عند نجاح النسخ ---
-
-        // أضف كلاس 'copied' "لهذا الزر" لتغيير شكله
         this.classList.add("copied");
-
-        // بعد 3 ثوانٍ، قم بإزالة الكلاس ليعود "هذا الزر" لحالته الأصلية
         setTimeout(() => {
           this.classList.remove("copied");
-        }, 1000); // 3000 ميلي ثانية = 3 ثواني
+        }, 1000);
       })
       .catch((err) => {
         console.error("فشل في نسخ النص: ", err);
@@ -324,20 +300,21 @@ window.addEventListener("DOMContentLoaded", () => {
     initLanguageToggle();
     highlightActiveMenu();
     initMenuToggle();
-    initIframeSkeletons(); // Added this call for static iframes like the map
+    initIframeSkeletons();
 
+    // Initialize scroll-related functions for the menu page
+    if (document.querySelector(".menu-content")) {
+      initScrollSpy();
+      initManualScrollDetection(); // <-- The new function is called here
+    }
+
+    // Load menu data if the function exists
     if (typeof loadMenuData === "function") {
       loadMenuData();
-    } else {
-      initScrollSpy();
     }
 
-    // Load correct form based on page
-    if (document.getElementById("feedback-wrapper")) {
-      loadDynamicForm("feedback");
-    }
-    if (document.getElementById("events-wrapper")) {
-      loadDynamicForm("events");
-    }
+    // Load dynamic forms if their wrappers exist
+    if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
+    if (document.getElementById("events-wrapper")) loadDynamicForm("events");
   });
 });
