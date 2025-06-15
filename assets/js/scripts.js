@@ -11,15 +11,20 @@ function trackEvent(eventName, eventParams) {
 
 // --- UTILITY FUNCTIONS ---
 /**
- * Debounce function to limit the rate at which a function gets called.
- * @param {Function} func The function to debounce.
- * @param {number} delay The delay in milliseconds.
+ * Throttle function to limit the rate at which a function gets called.
+ * This is better for scroll events than debounce.
+ * @param {Function} func The function to throttle.
+ * @param {number} limit The throttle limit in milliseconds.
  */
-function debounce(func, delay) {
-  let timeout;
+function throttle(func, limit) {
+  let inThrottle;
   return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), delay);
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
   };
 }
 
@@ -29,12 +34,12 @@ let userLang = localStorage.getItem("preferredLanguage") || (navigator.language.
 let allTranslations = {};
 let isProgrammaticScroll = false;
 let scrollTimeout;
-let intersectionObserver = null;
 
 
 // --- CORE FUNCTIONS ---
 
 function loadDynamicForm(formType) {
+  // ... (This function remains unchanged)
   if (typeof userLang === "undefined") {
     setTimeout(() => loadDynamicForm(formType), 50);
     return;
@@ -65,6 +70,7 @@ function loadDynamicForm(formType) {
 }
 
 function initIframeSkeletons() {
+  // ... (This function remains unchanged)
   document.querySelectorAll(".iframe-container").forEach(container => {
     const iframe = container.querySelector("iframe");
     if (iframe && iframe.dataset.src) {
@@ -75,6 +81,7 @@ function initIframeSkeletons() {
 }
 
 function setActiveTab(catId) {
+  // ... (This function remains unchanged)
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
   const activeBtn = document.querySelector(`.tab-btn[data-cat="${catId}"]`);
   if (activeBtn) {
@@ -83,41 +90,40 @@ function setActiveTab(catId) {
   }
 }
 
-function initScrollSpy() {
+// --- NEW SCROLL HANDLING LOGIC (REPLACES initScrollSpy) ---
+function initScrollHandler() {
   const container = document.querySelector(".menu-content");
   if (!container) return;
-  if (intersectionObserver) intersectionObserver.disconnect();
+
   const sections = document.querySelectorAll(".category-section");
   if (sections.length === 0) return;
 
   const tabsContainer = document.querySelector(".menu-tabs");
-  const topOffset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 5;
-  const observerOptions = {
-    root: container,
-    rootMargin: `-${topOffset}px 0px -80% 0px`, // Adjusted margin slightly
-    threshold: 0,
-  };
+  const topOffset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 10;
 
-  // --- MODIFICATION START ---
-  // Create a debounced version of setActiveTab.
-  // It will wait for 100ms of scrolling inactivity before firing.
-  const debouncedSetActiveTab = debounce(setActiveTab, 100);
-
-  intersectionObserver = new IntersectionObserver(entries => {
+  const handleScroll = () => {
+    // If a programmatic scroll is happening, do nothing.
     if (isProgrammaticScroll) return;
 
-    const intersectingEntries = entries.filter(e => e.isIntersecting);
-    if (intersectingEntries.length > 0) {
-      const activeEntry = intersectingEntries[intersectingEntries.length - 1];
-      const id = activeEntry.target.id;
-      // Call the debounced function instead of the original one directly.
-      debouncedSetActiveTab(id);
-    }
-  }, observerOptions);
-  // --- MODIFICATION END ---
+    let currentSectionId = sections[0].id;
 
-  sections.forEach(section => intersectionObserver.observe(section));
+    // Find which section is currently at the top of the viewport
+    sections.forEach(section => {
+      const sectionTop = section.getBoundingClientRect().top;
+      if (sectionTop <= topOffset) {
+        currentSectionId = section.id;
+      }
+    });
+
+    setActiveTab(currentSectionId);
+  };
+
+  // Use the throttle utility to prevent the function from firing too often
+  const throttledHandleScroll = throttle(handleScroll, 100);
+  container.addEventListener('scroll', throttledHandleScroll);
 }
+// --- END OF NEW SCROLL HANDLING LOGIC ---
+
 
 function initManualScrollDetection() {
   const container = document.querySelector(".menu-content");
@@ -128,6 +134,7 @@ function initManualScrollDetection() {
 }
 
 function includeHTML() {
+  // ... (This function remains unchanged)
   const includeEls = Array.from(document.querySelectorAll("[data-include]"));
   return Promise.all(
     includeEls.map(el =>
@@ -140,6 +147,7 @@ function includeHTML() {
 }
 
 function applyTranslations() {
+  // ... (This function remains unchanged)
   const dict = allTranslations[userLang] || {};
   document.querySelectorAll("[data-i18n-key]").forEach(el => {
     const key = el.getAttribute("data-i18n-key");
@@ -148,11 +156,13 @@ function applyTranslations() {
 }
 
 function applyDirection() {
+  // ... (This function remains unchanged)
   document.documentElement.lang = userLang;
   document.documentElement.dir = userLang === "ar" ? "rtl" : "ltr";
 }
 
 function initLanguageToggle() {
+  // ... (This function remains unchanged)
   const btn = document.getElementById("lang-toggle");
   if (!btn) return;
   btn.innerHTML = userLang === "ar" ? "English" : "العربية";
@@ -171,6 +181,7 @@ function initLanguageToggle() {
 }
 
 function initMenuToggle() {
+  // ... (This function remains unchanged)
   const menuToggle = document.querySelector(".menu-toggle");
   const sideMenu = document.querySelector(".side-menu");
   const closeBtn = document.querySelector(".close-menu");
@@ -195,6 +206,7 @@ function initMenuToggle() {
 }
 
 function highlightActiveMenu() {
+  // ... (This function remains unchanged)
   const page = window.location.pathname.split("/").pop() || "index.html";
   const menuPages = ["menu.html", "offers.html"];
   const gamesPages = ["games.html", "mission.html", "spinner.html"];
@@ -213,6 +225,7 @@ function highlightActiveMenu() {
 
 const copyButtons = document.querySelectorAll(".copy-button");
 copyButtons.forEach(button => {
+  // ... (This function remains unchanged)
   button.addEventListener("click", function (event) {
     event.preventDefault();
     const textToCopy = this.querySelector(".text-to-copy").innerText;
@@ -242,15 +255,19 @@ window.addEventListener("DOMContentLoaded", () => {
     initMenuToggle();
     initIframeSkeletons();
 
+    // Initialize scroll-related functions for the menu page
     if (document.querySelector(".menu-content")) {
-      initScrollSpy();
+      // THE NEW LOGIC IS CALLED HERE, REPLACING initScrollSpy
+      initScrollHandler();
       initManualScrollDetection();
     }
 
+    // Load menu data if the function exists
     if (typeof loadMenuData === "function") {
       loadMenuData();
     }
 
+    // Load dynamic forms if their wrappers exist
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
   });
