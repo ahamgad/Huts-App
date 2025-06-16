@@ -68,7 +68,9 @@ i {
   line-height: 1;
   text-transform: uppercase;
 }
-
+.logo-text.hidden-on-mobile {
+  display: none;
+}
 /* Navigation */
 .site-nav {
   margin-inline-start: auto;
@@ -929,17 +931,6 @@ html[dir="rtl"] .flippable-image {
   }
   .back-button.visible {
     display: flex;
-  }
-  /* --- Logic to hide logo text on non-home pages --- */
-
-  /* 1. بشكل افتراضي، قم بإخفاء نص اللوجو في كل الصفحات */
-  .site-header .logo-text {
-    display: none;
-  }
-
-  /* 2. أظهره فقط إذا كان العنصر الأب (body) يحمل كلاس .is-homepage */
-  body.is-homepage .site-header .logo-text {
-    display: block; /* أو flex حسب الحاجة */
   }
 }
 

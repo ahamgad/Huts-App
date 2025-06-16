@@ -243,15 +243,25 @@ function initBackButton() {
   }
 }
 
+// --- NEW: Hides the logo text on mobile on non-home pages ---
+function initLogoTextVisibility() {
+  const logoText = document.querySelector('.logo-text');
+  if (!logoText) return;
+
+  // Condition 1: Is it a touch device?
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  // Condition 2: Is it the homepage?
+  const isHomePage = document.querySelector('.home-content');
+
+  // If it's a touch device AND we are NOT on the homepage, hide the text.
+  if (isTouchDevice && !isHomePage) {
+    logoText.classList.add('hidden-on-mobile');
+  }
+}
+
 // Boot sequence
 window.addEventListener("DOMContentLoaded", () => {
-  // --- NEW: Add this block to detect the homepage ---
-  const page = window.location.pathname.split("/").pop() || "index.html";
-  if (page === "index.html" || page === "") {
-    document.body.classList.add('is-homepage');
-  }
-  // --------------------------------------------------
-
   includeHTML().then(() => {
     fetch("assets/i18n/translations.json")
       .then(res => res.json())
@@ -261,11 +271,13 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .catch(err => console.error("Error loading translations:", err));
 
+    // Initialize all our functions once the DOM is ready
     initLanguageToggle();
     highlightActiveMenu();
     initMenuToggle();
     initIframeSkeletons();
     initBackButton();
+    initLogoTextVisibility(); // <-- The new function is called here
 
     if (document.querySelector(".menu-content")) {
       initScrollSpy();
