@@ -237,35 +237,31 @@ function initBackButton() {
   }
 }
 
-// --- NEW: FUNCTION FOR PAGE TRANSITIONS ON MOBILE ---
+// --- MODIFIED: FUNCTION FOR PAGE TRANSITIONS ON MOBILE ---
 function initPageTransitions() {
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (!isTouchDevice) return;
 
-  // 1. Only run this logic on mobile devices
-  if (!isTouchDevice) {
-    return;
-  }
-
-  // 2. Add the class to the body to trigger the initial fade-in animation
   document.body.classList.add('transition-fade');
 
-  // 3. Find all navigational links that don't open in a new tab and are not on-page anchors
   const navLinks = document.querySelectorAll('a[href]:not([href^="#"]):not([target="_blank"])');
 
   navLinks.forEach(link => {
+    // FIX 1: Explicitly ignore the back button by its ID
+    if (link.id === 'back-btn') {
+      return;
+    }
+
     link.addEventListener('click', function (e) {
       const destination = this.getAttribute('href');
-
-      // Prevent the browser from navigating immediately
       e.preventDefault();
 
-      // Apply the fade-out animation by directly setting the style
-      document.body.style.animation = 'fadeOutPage 0.4s ease-out forwards';
+      document.body.style.animation = 'fadeOutPage 0.25s ease-out forwards';
 
-      // After the animation finishes, navigate to the new page
+      // FIX 3: Updated timeout to match faster animation
       setTimeout(() => {
         window.location.href = destination;
-      }, 400); // This duration should match the animation duration in CSS
+      }, 250);
     });
   });
 }
@@ -286,9 +282,7 @@ window.addEventListener("DOMContentLoaded", () => {
     initMenuToggle();
     initIframeSkeletons();
     initBackButton();
-
-    // Call the new page transition function
-    initPageTransitions();
+    initPageTransitions(); // Call the transition function
 
     if (document.querySelector(".menu-content")) {
       initScrollSpy();
@@ -302,13 +296,14 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// --- PAGE STATE CORRECTION ON BACK/FORWARD NAVIGATION ---
+// --- MODIFIED: PAGE STATE CORRECTION ON BACK/FORWARD NAVIGATION ---
 window.addEventListener('pageshow', function (event) {
-  // event.persisted is true if the page was loaded from the bfcache.
   if (event.persisted) {
-    console.log('Page restored from bfcache. Checking for state updates.');
+    // FIX 2: Force the page to be visible when loaded from cache
+    document.body.classList.remove('transition-fade'); // Remove transition class
+    document.body.style.animation = ''; // Remove any lingering animation
+    document.body.style.opacity = 1; // Force opacity to 1
 
-    // --- FIX 1: Side Menu State ---
     const sideMenu = document.querySelector('.side-menu');
     const themeColorMeta = document.getElementById('theme-color-meta');
     if (sideMenu && sideMenu.classList.contains('open')) {
@@ -318,17 +313,12 @@ window.addEventListener('pageshow', function (event) {
       themeColorMeta.setAttribute('content', '#ffffff');
     }
 
-    // --- FIX 2: Language State ---
     const savedLang = localStorage.getItem("preferredLanguage") || (navigator.language.startsWith("ar") ? "ar" : "en");
     const currentLang = document.documentElement.lang;
-
     if (savedLang !== currentLang) {
-      console.log(`Language mismatch on cached page. Applying '${savedLang}'.`);
-      userLang = savedLang; // Update the global variable
+      userLang = savedLang;
       applyDirection();
       applyTranslations();
-
-      // Also update the language toggle button text
       const langToggleBtn = document.getElementById('lang-toggle');
       if (langToggleBtn) {
         langToggleBtn.innerHTML = userLang === "ar" ? "English" : "العربية";

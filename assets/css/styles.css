@@ -935,7 +935,7 @@ html[dir="rtl"] .flippable-image {
   */
   body.transition-fade {
     opacity: 0;
-    animation: fadeInPage 0.4s ease-out forwards;
+    animation: fadeInPage 0.25s ease-out forwards;
   }
 }
 
