@@ -129,10 +129,12 @@ i {
   color: var(--color-black-500);
   border: var(--border-style);
   margin-inline-end: 8px;
-  i {
-    display: flex;
-    aspect-ratio: 1/1;
-  }
+}
+
+/* --- FIX: Corrected nested CSS --- */
+.back-button i {
+  display: flex;
+  aspect-ratio: 1/1;
 }
 
 /* Mobile Menu Toggle */
@@ -147,11 +149,13 @@ i {
   background-color: var(--bg-primary);
   color: var(--color-black-500);
   border: var(--border-style);
-  i {
-    display: flex;
-    width: 17px;
-    height: 17px;
-  }
+}
+
+/* --- FIX: Corrected nested CSS --- */
+.menu-toggle i {
+  display: flex;
+  width: 17px;
+  height: 17px;
 }
 
 /* Side Menu */
@@ -221,9 +225,11 @@ i {
   border-radius: var(--cta-radius);
   line-height: inherit;
   background: var(--bg-primary);
-  i {
-    display: flex;
-  }
+}
+
+/* --- FIX: Corrected nested CSS --- */
+.side-menu ul li a i {
+  display: flex;
 }
 
 .side-menu a.active {
@@ -769,11 +775,13 @@ html[dir="rtl"] .flippable-image {
   border-radius: 0;
   border: none;
   border-bottom: var(--border-style);
-  span {
-    text-align: start;
-    color: var(--color-black-500);
-    font-size: 0.875rem;
-  }
+}
+
+/* --- FIX: Corrected nested CSS --- */
+.copy-button.enBank span {
+  text-align: start;
+  color: var(--color-black-500);
+  font-size: 0.875rem;
 }
 
 .copy-button i {
@@ -1007,54 +1015,52 @@ html[dir="ltr"] .img-en {
 }
 
 /* --- IFRAME SKELETON LOADER STYLES START --- */
-/* This section now combines styles for BOTH form and map iframes */
-
-.google-form-container .skeleton-loader,
-.iframe-container .skeleton-loader {
+.google-form-container .skeleton-loader {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 16px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: calc(100% - var(--body-padding-large));
+  max-width: 640px;
+  height: calc(100% - 32px);
+  margin: 0 auto;
+  align-self: center;
   z-index: 1;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
   transition: opacity 0.5s ease-out;
+  border-radius: var(--radius-medium);
 }
 
-.skeleton-loader.form {
-  height: calc(100% - 32px);
-  max-width: 640px;
-  width: calc(100% - 52px);
-  top: 16px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  border-radius: var(--radius-large);
-}
-.google-form-container iframe,
-.iframe-container iframe {
+.google-form-container iframe {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.5s ease-in;
   position: relative;
   z-index: 2;
-  display: block; /* Ensure iframe takes up space */
-  width: 100%;
-  height: 100%;
-  border: 0;
-  overflow-x: hidden;
 }
 
-.google-form-container.loaded .skeleton-loader,
-.iframe-container.loaded .skeleton-loader {
+.google-form-container.loaded .skeleton-loader {
   opacity: 0;
   pointer-events: none;
 }
 
-.google-form-container.loaded iframe,
-.iframe-container.loaded iframe {
+.google-form-container.loaded iframe {
   opacity: 1;
   visibility: visible;
 }
 /* --- IFRAME SKELETON LOADER STYLES END --- */
+
+body.noscroll {
+  overflow: hidden;
+}
+
+.menu-page-footer {
+  display: none;
+}
+
+/* --- Fix for jumpy scrolling on mobile --- */
+.menu-content {
+  scroll-snap-type: none;
+}

@@ -12,7 +12,7 @@ function trackEvent(eventName, eventParams) {
 // --- GLOBAL VARIABLES ---
 let userLang = localStorage.getItem("preferredLanguage") || (navigator.language.startsWith("ar") ? "ar" : "en");
 let allTranslations = {};
-let isProgrammaticScroll = false; // We need this flag again
+let isProgrammaticScroll = false;
 let scrollTimeout;
 let intersectionObserver = null;
 
@@ -159,19 +159,18 @@ function initLanguageToggle() {
   });
 }
 
+
+// --- MODIFIED FUNCTION for side menu ---
 function initMenuToggle() {
   const menuToggle = document.querySelector(".menu-toggle");
   const sideMenu = document.querySelector(".side-menu");
   const closeBtn = document.querySelector(".close-menu");
-
-  // استهداف الميتا تاج عن طريق الـ ID الذي حددناه في الـ HTML
   const themeColorMeta = document.getElementById('theme-color-meta');
 
   if (!menuToggle || !sideMenu || !closeBtn) return;
 
   const openMenu = () => {
     sideMenu.classList.add("open");
-    // عند الفتح، غيّر اللون إلى لون القائمة
     if (themeColorMeta) {
       themeColorMeta.setAttribute('content', '#f8f9fa');
     }
@@ -180,7 +179,6 @@ function initMenuToggle() {
 
   const closeMenu = () => {
     sideMenu.classList.remove("open");
-    // عند الإغلاق، أعد اللون إلى الأبيض
     if (themeColorMeta) {
       themeColorMeta.setAttribute('content', '#ffffff');
     }
@@ -190,7 +188,6 @@ function initMenuToggle() {
   menuToggle.addEventListener("click", openMenu);
   closeBtn.addEventListener("click", closeMenu);
 
-  // عند الضغط خارج القائمة لإغلاقها
   document.addEventListener("click", (e) => {
     if (
       sideMenu.classList.contains("open") &&
@@ -200,7 +197,16 @@ function initMenuToggle() {
       closeMenu();
     }
   });
+
+  // --- NEW: This part solves the history.back() problem ---
+  // Add click listeners to all links inside the side menu
+  const sideMenuLinks = sideMenu.querySelectorAll('a');
+  sideMenuLinks.forEach(link => {
+    // When a link is clicked, close the menu first.
+    link.addEventListener('click', closeMenu);
+  });
 }
+
 
 function highlightActiveMenu() {
   const page = window.location.pathname.split("/").pop() || "index.html";
@@ -234,27 +240,25 @@ copyButtons.forEach(button => {
   });
 });
 
-// --- NEW FUNCTION FOR THE BACK BUTTON ---
+// --- MODIFIED FUNCTION for back button visibility ---
 function initBackButton() {
   const backBtn = document.getElementById('back-btn');
-  if (!backBtn) return; // إذا لم يتم العثور على الزر، اخرج
+  if (!backBtn) return;
 
-  // 1. تحديد الصفحة الحالية
-  const page = window.location.pathname.split("/").pop() || "index.html";
+  // This is a more reliable way to check for the homepage
+  const isHomePage = document.querySelector('.home-content');
 
-  // 2. التحقق إذا لم تكن الصفحة الرئيسية
-  if (page !== "index.html" && page !== "") {
-    // إظهار الزر عن طريق إضافة كلاس .visible
+  // If the unique homepage element is NOT found, then we are on another page.
+  if (!isHomePage) {
     backBtn.classList.add('visible');
 
-    // 3. إضافة وظيفة الرجوع عند الضغط
     backBtn.addEventListener('click', (e) => {
-      e.preventDefault(); // منع سلوك الرابط الافتراضي
-      window.history.back(); // الأمر الذي يقوم بالرجوع للخلف
+      e.preventDefault();
+      window.history.back();
     });
   }
 }
-// --- END OF NEW FUNCTION ---
+
 
 // Boot sequence
 window.addEventListener("DOMContentLoaded", () => {
@@ -271,7 +275,7 @@ window.addEventListener("DOMContentLoaded", () => {
     highlightActiveMenu();
     initMenuToggle();
     initIframeSkeletons();
-    initBackButton(); // <-- استدعاء دالة زر الرجوع الجديدة هنا
+    initBackButton(); // <-- The call is here
 
     // Initialize scroll-related functions if on the menu page
     if (document.querySelector(".menu-content")) {
