@@ -234,6 +234,28 @@ copyButtons.forEach(button => {
   });
 });
 
+// --- NEW FUNCTION FOR THE BACK BUTTON ---
+function initBackButton() {
+  const backBtn = document.getElementById('back-btn');
+  if (!backBtn) return; // إذا لم يتم العثور على الزر، اخرج
+
+  // 1. تحديد الصفحة الحالية
+  const page = window.location.pathname.split("/").pop() || "index.html";
+
+  // 2. التحقق إذا لم تكن الصفحة الرئيسية
+  if (page !== "index.html" && page !== "") {
+    // إظهار الزر عن طريق إضافة كلاس .visible
+    backBtn.classList.add('visible');
+
+    // 3. إضافة وظيفة الرجوع عند الضغط
+    backBtn.addEventListener('click', (e) => {
+      e.preventDefault(); // منع سلوك الرابط الافتراضي
+      window.history.back(); // الأمر الذي يقوم بالرجوع للخلف
+    });
+  }
+}
+// --- END OF NEW FUNCTION ---
+
 // Boot sequence
 window.addEventListener("DOMContentLoaded", () => {
   includeHTML().then(() => {
@@ -249,6 +271,7 @@ window.addEventListener("DOMContentLoaded", () => {
     highlightActiveMenu();
     initMenuToggle();
     initIframeSkeletons();
+    initBackButton(); // <-- استدعاء دالة زر الرجوع الجديدة هنا
 
     // Initialize scroll-related functions if on the menu page
     if (document.querySelector(".menu-content")) {

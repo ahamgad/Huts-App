@@ -39,8 +39,14 @@ function renderSkeletonLoader() {
 
 /**
  * Fetches and parses the CSV data from Google Sheets.
+ * It now prevents scrolling and hides the footer while loading.
  */
 function loadMenuData() {
+  const menuContent = document.querySelector('.menu-content');
+  if (menuContent) {
+    menuContent.classList.add('noscroll');
+  }
+
   renderSkeletonLoader();
 
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vROZEd2FRFZXsGihkUTQPCpBXMwwkMwBioYoemaBX1P8XYWhUQqpw4yA8s4E-plSlbPAxeb5i3bkFEU/pub?gid=0&single=true&output=csv";
@@ -56,10 +62,26 @@ function loadMenuData() {
         groupedData[r.category_id].push(r);
       });
       renderAll();
+
+      // --- جديد: إظهار الفوتر بعد عرض المحتوى ---
+      const footer = document.querySelector('.menu-page-footer');
+      if (footer) {
+        // نستخدم 'flex' لأن هذا هو نوع العرض الافتراضي للفوتر في ملف CSS
+        footer.style.display = 'flex';
+      }
+      // ------------------------------------
+
+      if (menuContent) {
+        menuContent.classList.remove('noscroll');
+      }
     },
     error: (err) => {
       console.error("CSV parse error:", err);
       document.getElementById("product-list").innerHTML = `<p>Failed to load menu. Please try again later.</p>`;
+
+      if (menuContent) {
+        menuContent.classList.remove('noscroll');
+      }
     },
   });
 }
@@ -107,22 +129,17 @@ function renderTabs(data) {
         const tabsContainer = document.querySelector('.menu-tabs');
 
         if (section && container) {
-          // Calculate the offset (height of the sticky tabs bar)
           const offset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 20;
-
-          // Calculate the target scroll position by subtracting the offset
           const targetY = section.offsetTop - offset;
 
           isProgrammaticScroll = true;
           setActiveTab(categoryId);
 
-          // Use scrollTo for precise positioning with an instant jump
           container.scrollTo({
             top: targetY,
             behavior: "auto"
           });
 
-          // Reset the flag after a short delay
           setTimeout(() => { isProgrammaticScroll = false; }, 300);
         }
       } else {

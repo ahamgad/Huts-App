@@ -114,18 +114,44 @@ i {
   gap: var(--cta-gap);
 }
 
+.back-button {
+  display: none; /* إخفاء الزر بشكل افتراضي */
+  align-items: center;
+  justify-content: center;
+  font-family: var(--cta-font-family);
+  font-size: 1.5rem;
+  font-weight: 800;
+  padding: 8px;
+  width: 35px;
+  height: 35px;
+  border-radius: var(--cta-radius);
+  background-color: var(--bg-primary);
+  color: var(--color-black-500);
+  border: var(--border-style);
+  margin-inline-end: 8px;
+  i {
+    display: flex;
+    aspect-ratio: 1/1;
+  }
+}
+
 /* Mobile Menu Toggle */
 .menu-toggle {
   display: none;
   margin-inline-start: 8px;
   font-family: var(--cta-font-family);
-  font-size: 1.125rem;
+  font-size: var(--cta-font-size);
   font-weight: var(--cta-font-weight);
   padding: 8px;
   border-radius: var(--cta-radius);
   background-color: var(--bg-primary);
   color: var(--color-black-500);
-  border: hidden;
+  border: var(--border-style);
+  i {
+    display: flex;
+    width: 17px;
+    height: 17px;
+  }
 }
 
 /* Side Menu */
@@ -137,7 +163,7 @@ i {
   height: 100%;
   background-color: var(--bg-secondary);
   transition: 0.3s ease;
-  padding: 40px;
+  padding: var(--body-padding-large);
   overflow-y: auto;
   z-index: 1100;
 }
@@ -148,8 +174,8 @@ i {
   background: none;
   border: none;
   position: absolute;
-  top: 40px;
-  inset-inline-end: 40px;
+  top: var(--body-padding-large);
+  inset-inline-end: var(--body-padding-large);
   cursor: pointer;
   font-family: var(--cta-font-family);
   font-size: 1.5rem;
@@ -170,7 +196,7 @@ i {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 }
 .side-menu ul li {
@@ -204,25 +230,25 @@ i {
   color: var(--color-primary-300);
   border-inline-start: 2px solid var(--color-primary-300);
 }
-.side-menu footer {
+.site-footer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: var(--body-padding-large);
   color: var(--color-black-500);
   font-family: var(--cta-font-family);
   font-size: 0.75rem;
   font-weight: 400;
 }
 
-.side-menu footer .container {
+.site-footer .container {
   display: flex;
   gap: 12px;
 }
 
-.side-menu footer .container a .social-img {
+.site-footer .container a .social-img {
   width: 32px;
   height: 32px;
 }
@@ -239,15 +265,10 @@ html[dir="rtl"] .flippable-image {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: calc(100% - var(--body-padding-large) * 2);
-  background-color: var(--bg-primary);
-  border: var(--border-style);
-  border-start-start-radius: 0;
-  border-start-end-radius: var(--radius-large);
-  border-end-end-radius: var(--radius-large);
-  border-end-start-radius: 0;
-  padding: 24px;
+  height: 100%;
   width: 100%;
+  background-color: var(--bg-secondary);
+  padding: 24px;
 }
 
 .site-desktop .title {
@@ -375,6 +396,10 @@ html[dir="rtl"] .flippable-image {
   padding: 0 var(--body-padding-large) var(--body-padding-large);
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.menu-content.noscroll {
+  overflow: hidden;
 }
 
 /* Fixed Category Tabs (now sticky inside its parent) */
@@ -539,7 +564,7 @@ html[dir="rtl"] .flippable-image {
   color: var(--color-black-400);
 }
 .menu-page-footer {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -893,6 +918,9 @@ html[dir="rtl"] .flippable-image {
   }
   .page-sub-header.iframe {
     padding: var(--body-padding-medium);
+  }
+  .back-button.visible {
+    display: flex;
   }
 }
 
