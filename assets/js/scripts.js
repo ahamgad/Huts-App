@@ -218,9 +218,15 @@ copyButtons.forEach(button => {
       .writeText(textToCopy)
       .then(() => {
         this.classList.add("copied");
-        setTimeout(() => this.classList.remove("copied"), 1000);
+        this.blur();
+        setTimeout(() => {
+          this.classList.remove("copied");
+        }, 1000);
       })
-      .catch(err => console.error("فشل في نسخ النص: ", err));
+      .catch(err => {
+        console.error("فشل في نسخ النص: ", err);
+        this.blur();
+      });
   });
 });
 
@@ -237,37 +243,15 @@ function initBackButton() {
   }
 }
 
-// --- MODIFIED: FUNCTION FOR PAGE TRANSITIONS ON MOBILE ---
-function initPageTransitions() {
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  if (!isTouchDevice) return;
-
-  document.body.classList.add('transition-fade');
-
-  const navLinks = document.querySelectorAll('a[href]:not([href^="#"]):not([target="_blank"])');
-
-  navLinks.forEach(link => {
-    // FIX 1: Explicitly ignore the back button by its ID
-    if (link.id === 'back-btn') {
-      return;
-    }
-
-    link.addEventListener('click', function (e) {
-      const destination = this.getAttribute('href');
-      e.preventDefault();
-
-      document.body.style.animation = 'fadeOutPage 0.25s ease-out forwards';
-
-      // FIX 3: Updated timeout to match faster animation
-      setTimeout(() => {
-        window.location.href = destination;
-      }, 250);
-    });
-  });
-}
-
-// --- BOOT SEQUENCE ---
+// Boot sequence
 window.addEventListener("DOMContentLoaded", () => {
+  // --- NEW: Add this block to detect the homepage ---
+  const page = window.location.pathname.split("/").pop() || "index.html";
+  if (page === "index.html" || page === "") {
+    document.body.classList.add('is-homepage');
+  }
+  // --------------------------------------------------
+
   includeHTML().then(() => {
     fetch("assets/i18n/translations.json")
       .then(res => res.json())
@@ -282,7 +266,6 @@ window.addEventListener("DOMContentLoaded", () => {
     initMenuToggle();
     initIframeSkeletons();
     initBackButton();
-    initPageTransitions(); // Call the transition function
 
     if (document.querySelector(".menu-content")) {
       initScrollSpy();
@@ -296,14 +279,10 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// --- MODIFIED: PAGE STATE CORRECTION ON BACK/FORWARD NAVIGATION ---
+// PAGE STATE CORRECTION ON BACK/FORWARD NAVIGATION
 window.addEventListener('pageshow', function (event) {
   if (event.persisted) {
-    // FIX 2: Force the page to be visible when loaded from cache
-    document.body.classList.remove('transition-fade'); // Remove transition class
-    document.body.style.animation = ''; // Remove any lingering animation
-    document.body.style.opacity = 1; // Force opacity to 1
-
+    console.log('Page restored from bfcache. Checking for state updates.');
     const sideMenu = document.querySelector('.side-menu');
     const themeColorMeta = document.getElementById('theme-color-meta');
     if (sideMenu && sideMenu.classList.contains('open')) {
@@ -312,10 +291,10 @@ window.addEventListener('pageshow', function (event) {
     if (themeColorMeta && themeColorMeta.getAttribute('content') !== '#ffffff') {
       themeColorMeta.setAttribute('content', '#ffffff');
     }
-
     const savedLang = localStorage.getItem("preferredLanguage") || (navigator.language.startsWith("ar") ? "ar" : "en");
     const currentLang = document.documentElement.lang;
     if (savedLang !== currentLang) {
+      console.log(`Language mismatch on cached page. Applying '${savedLang}'.`);
       userLang = savedLang;
       applyDirection();
       applyTranslations();
