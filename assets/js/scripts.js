@@ -19,7 +19,6 @@ let intersectionObserver = null;
 // --- CORE FUNCTIONS ---
 
 function loadDynamicForm(formType) {
-  // This function remains unchanged
   if (typeof userLang === "undefined") {
     setTimeout(() => loadDynamicForm(formType), 50);
     return;
@@ -50,7 +49,6 @@ function loadDynamicForm(formType) {
 }
 
 function initIframeSkeletons() {
-  // This function remains unchanged
   document.querySelectorAll(".iframe-container").forEach(container => {
     const iframe = container.querySelector("iframe");
     if (iframe && iframe.dataset.src) {
@@ -60,9 +58,6 @@ function initIframeSkeletons() {
   });
 }
 
-/**
- * Sets the active tab and scrolls the horizontal tab bar.
- */
 function setActiveTab(catId) {
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
   const activeBtn = document.querySelector(`a.tab-btn[href="#${catId}"]`);
@@ -72,17 +67,12 @@ function setActiveTab(catId) {
   }
 }
 
-/**
- * Initializes the IntersectionObserver scroll spy.
- */
 function initScrollSpy() {
   const container = document.querySelector(".menu-content");
   if (!container) return;
   if (intersectionObserver) intersectionObserver.disconnect();
-
   const sections = document.querySelectorAll(".category-section");
   if (sections.length === 0) return;
-
   const tabsContainer = document.querySelector(".menu-tabs");
   const topOffset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 5;
   const observerOptions = {
@@ -90,23 +80,17 @@ function initScrollSpy() {
     rootMargin: `-${topOffset}px 0px -85% 0px`,
     threshold: 0,
   };
-
   intersectionObserver = new IntersectionObserver(entries => {
     if (isProgrammaticScroll) return;
-
     const intersectingEntries = entries.filter(e => e.isIntersecting);
     if (intersectingEntries.length > 0) {
       const activeEntry = intersectingEntries[intersectingEntries.length - 1];
       setActiveTab(activeEntry.target.id);
     }
   }, observerOptions);
-
   sections.forEach(section => intersectionObserver.observe(section));
 }
 
-/**
- * Detects manual user scroll to reset the programmatic scroll flag.
- */
 function initManualScrollDetection() {
   const container = document.querySelector(".menu-content");
   if (!container) return;
@@ -114,7 +98,6 @@ function initManualScrollDetection() {
   container.addEventListener('wheel', handleManualScroll, { passive: true });
   container.addEventListener('touchstart', handleManualScroll, { passive: true });
 }
-
 
 function includeHTML() {
   const includeEls = Array.from(document.querySelectorAll("[data-include]"));
@@ -159,7 +142,6 @@ function initLanguageToggle() {
   });
 }
 
-// --- FINAL MODIFIED FUNCTION for side menu ---
 function initMenuToggle() {
   const menuToggle = document.querySelector(".menu-toggle");
   const sideMenu = document.querySelector(".side-menu");
@@ -197,25 +179,18 @@ function initMenuToggle() {
     }
   });
 
-  // --- NEW: This part solves the Chrome history.back() problem ---
   const sideMenuLinks = sideMenu.querySelectorAll('a');
   sideMenuLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-      // 1. Prevent the browser from navigating immediately
       e.preventDefault();
       const destination = e.currentTarget.href;
-
-      // 2. Close the menu
       closeMenu();
-
-      // 3. Wait for the menu closing animation (0.3s in your CSS) to finish, then navigate
       setTimeout(() => {
         window.location.href = destination;
       }, 300);
     });
   });
 }
-
 
 function highlightActiveMenu() {
   const page = window.location.pathname.split("/").pop() || "index.html";
@@ -262,7 +237,7 @@ function initBackButton() {
   }
 }
 
-// Boot sequence
+// --- BOOT SEQUENCE ---
 window.addEventListener("DOMContentLoaded", () => {
   includeHTML().then(() => {
     fetch("assets/i18n/translations.json")
@@ -289,4 +264,39 @@ window.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
   });
+});
+
+// --- PAGE STATE CORRECTION ON BACK/FORWARD NAVIGATION ---
+window.addEventListener('pageshow', function (event) {
+  // event.persisted is true if the page was loaded from the bfcache.
+  if (event.persisted) {
+    console.log('Page restored from bfcache. Checking for state updates.');
+
+    // --- FIX 1: Side Menu State ---
+    const sideMenu = document.querySelector('.side-menu');
+    const themeColorMeta = document.getElementById('theme-color-meta');
+    if (sideMenu && sideMenu.classList.contains('open')) {
+      sideMenu.classList.remove('open');
+    }
+    if (themeColorMeta && themeColorMeta.getAttribute('content') !== '#ffffff') {
+      themeColorMeta.setAttribute('content', '#ffffff');
+    }
+
+    // --- FIX 2: Language State ---
+    const savedLang = localStorage.getItem("preferredLanguage") || (navigator.language.startsWith("ar") ? "ar" : "en");
+    const currentLang = document.documentElement.lang;
+
+    if (savedLang !== currentLang) {
+      console.log(`Language mismatch on cached page. Applying '${savedLang}'.`);
+      userLang = savedLang; // Update the global variable
+      applyDirection();
+      applyTranslations();
+
+      // Also update the language toggle button text
+      const langToggleBtn = document.getElementById('lang-toggle');
+      if (langToggleBtn) {
+        langToggleBtn.innerHTML = userLang === "ar" ? "English" : "العربية";
+      }
+    }
+  }
 });
