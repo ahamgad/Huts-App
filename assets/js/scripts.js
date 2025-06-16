@@ -230,23 +230,10 @@ copyButtons.forEach(button => {
   });
 });
 
+// --- MODIFIED: Back button now only appears on mobile AND non-home pages ---
 function initBackButton() {
   const backBtn = document.getElementById('back-btn');
   if (!backBtn) return;
-  const isHomePage = document.querySelector('.home-content');
-  if (!isHomePage) {
-    backBtn.classList.add('visible');
-    backBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.history.back();
-    });
-  }
-}
-
-// --- NEW: Hides the logo text on mobile on non-home pages ---
-function initLogoTextVisibility() {
-  const logoText = document.querySelector('.logo-text');
-  if (!logoText) return;
 
   // Condition 1: Is it a touch device?
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -254,14 +241,37 @@ function initLogoTextVisibility() {
   // Condition 2: Is it the homepage?
   const isHomePage = document.querySelector('.home-content');
 
-  // If it's a touch device AND we are NOT on the homepage, hide the text.
+  // Show the button ONLY if it's a touch device AND not the homepage
+  if (isTouchDevice && !isHomePage) {
+    backBtn.classList.add('visible');
+
+    backBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.history.back();
+    });
+  }
+}
+
+function initLogoTextVisibility() {
+  const logoText = document.querySelector('.logo-text');
+  if (!logoText) return;
+
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const isHomePage = document.querySelector('.home-content');
+
   if (isTouchDevice && !isHomePage) {
     logoText.classList.add('hidden-on-mobile');
   }
 }
 
-// Boot sequence
+// --- BOOT SEQUENCE ---
 window.addEventListener("DOMContentLoaded", () => {
+  // Add homepage class first to prevent flash of content
+  const page = window.location.pathname.split("/").pop() || "index.html";
+  if (page === "index.html" || page === "") {
+    document.body.classList.add('is-homepage');
+  }
+
   includeHTML().then(() => {
     fetch("assets/i18n/translations.json")
       .then(res => res.json())
@@ -271,13 +281,12 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .catch(err => console.error("Error loading translations:", err));
 
-    // Initialize all our functions once the DOM is ready
     initLanguageToggle();
     highlightActiveMenu();
     initMenuToggle();
     initIframeSkeletons();
     initBackButton();
-    initLogoTextVisibility(); // <-- The new function is called here
+    initLogoTextVisibility();
 
     if (document.querySelector(".menu-content")) {
       initScrollSpy();
@@ -291,7 +300,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// PAGE STATE CORRECTION ON BACK/FORWARD NAVIGATION
+// --- PAGE STATE CORRECTION ON BACK/FORWARD NAVIGATION ---
 window.addEventListener('pageshow', function (event) {
   if (event.persisted) {
     console.log('Page restored from bfcache. Checking for state updates.');
