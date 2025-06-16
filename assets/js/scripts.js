@@ -237,6 +237,39 @@ function initBackButton() {
   }
 }
 
+// --- NEW: FUNCTION FOR PAGE TRANSITIONS ON MOBILE ---
+function initPageTransitions() {
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  // 1. Only run this logic on mobile devices
+  if (!isTouchDevice) {
+    return;
+  }
+
+  // 2. Add the class to the body to trigger the initial fade-in animation
+  document.body.classList.add('transition-fade');
+
+  // 3. Find all navigational links that don't open in a new tab and are not on-page anchors
+  const navLinks = document.querySelectorAll('a[href]:not([href^="#"]):not([target="_blank"])');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+      const destination = this.getAttribute('href');
+
+      // Prevent the browser from navigating immediately
+      e.preventDefault();
+
+      // Apply the fade-out animation by directly setting the style
+      document.body.style.animation = 'fadeOutPage 0.4s ease-out forwards';
+
+      // After the animation finishes, navigate to the new page
+      setTimeout(() => {
+        window.location.href = destination;
+      }, 400); // This duration should match the animation duration in CSS
+    });
+  });
+}
+
 // --- BOOT SEQUENCE ---
 window.addEventListener("DOMContentLoaded", () => {
   includeHTML().then(() => {
@@ -253,6 +286,9 @@ window.addEventListener("DOMContentLoaded", () => {
     initMenuToggle();
     initIframeSkeletons();
     initBackButton();
+
+    // Call the new page transition function
+    initPageTransitions();
 
     if (document.querySelector(".menu-content")) {
       initScrollSpy();

@@ -930,6 +930,13 @@ html[dir="rtl"] .flippable-image {
   .back-button.visible {
     display: flex;
   }
+  /* Make the body start transparent and apply the fade-in animation
+    when a new page loads.
+  */
+  body.transition-fade {
+    opacity: 0;
+    animation: fadeInPage 0.4s ease-out forwards;
+  }
 }
 
 /* --- Skeleton Loader Styles --- */
@@ -1063,4 +1070,26 @@ body.noscroll {
 /* --- Fix for jumpy scrolling on mobile --- */
 .menu-content {
   scroll-snap-type: none;
+}
+
+/* --- Page Transition Animations (Mobile Only) --- */
+
+/* This keyframe fades the page in */
+@keyframes fadeInPage {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* This keyframe fades the page out */
+@keyframes fadeOutPage {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
