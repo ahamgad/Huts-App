@@ -73,7 +73,7 @@ function setActiveTab(catId) {
 }
 
 /**
- * Initializes the IntersectionObserver scroll spy. It now works for both platforms.
+ * Initializes the IntersectionObserver scroll spy.
  */
 function initScrollSpy() {
   const container = document.querySelector(".menu-content");
@@ -159,8 +159,7 @@ function initLanguageToggle() {
   });
 }
 
-
-// --- MODIFIED FUNCTION for side menu ---
+// --- FINAL MODIFIED FUNCTION for side menu ---
 function initMenuToggle() {
   const menuToggle = document.querySelector(".menu-toggle");
   const sideMenu = document.querySelector(".side-menu");
@@ -198,12 +197,22 @@ function initMenuToggle() {
     }
   });
 
-  // --- NEW: This part solves the history.back() problem ---
-  // Add click listeners to all links inside the side menu
+  // --- NEW: This part solves the Chrome history.back() problem ---
   const sideMenuLinks = sideMenu.querySelectorAll('a');
   sideMenuLinks.forEach(link => {
-    // When a link is clicked, close the menu first.
-    link.addEventListener('click', closeMenu);
+    link.addEventListener('click', (e) => {
+      // 1. Prevent the browser from navigating immediately
+      e.preventDefault();
+      const destination = e.currentTarget.href;
+
+      // 2. Close the menu
+      closeMenu();
+
+      // 3. Wait for the menu closing animation (0.3s in your CSS) to finish, then navigate
+      setTimeout(() => {
+        window.location.href = destination;
+      }, 300);
+    });
   });
 }
 
@@ -240,25 +249,18 @@ copyButtons.forEach(button => {
   });
 });
 
-// --- MODIFIED FUNCTION for back button visibility ---
 function initBackButton() {
   const backBtn = document.getElementById('back-btn');
   if (!backBtn) return;
-
-  // This is a more reliable way to check for the homepage
   const isHomePage = document.querySelector('.home-content');
-
-  // If the unique homepage element is NOT found, then we are on another page.
   if (!isHomePage) {
     backBtn.classList.add('visible');
-
     backBtn.addEventListener('click', (e) => {
       e.preventDefault();
       window.history.back();
     });
   }
 }
-
 
 // Boot sequence
 window.addEventListener("DOMContentLoaded", () => {
@@ -275,18 +277,15 @@ window.addEventListener("DOMContentLoaded", () => {
     highlightActiveMenu();
     initMenuToggle();
     initIframeSkeletons();
-    initBackButton(); // <-- The call is here
+    initBackButton();
 
-    // Initialize scroll-related functions if on the menu page
     if (document.querySelector(".menu-content")) {
       initScrollSpy();
       initManualScrollDetection();
     }
-
     if (typeof loadMenuData === "function") {
       loadMenuData();
     }
-
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
   });
