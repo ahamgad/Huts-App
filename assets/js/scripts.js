@@ -132,15 +132,26 @@ function initLanguageToggle() {
   btn.addEventListener("click", () => {
     userLang = userLang === "en" ? "ar" : "en";
     localStorage.setItem("preferredLanguage", userLang);
+
     applyTranslations();
     applyDirection();
     btn.innerHTML = userLang === "ar" ? "English" : "العربية";
+
+    // This re-renders dynamic content on other pages
     if (typeof window.renderAll === "function") window.renderAll();
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
+
+    // --- NEW: Add this line to redraw the spinner game if it exists ---
+    if (typeof window.redrawSpinnerView === "function") {
+      window.redrawSpinnerView();
+    }
+    // -----------------------------------------------------------------
+
     trackEvent("Language_Toggle", { language_to: userLang });
   });
 }
+
 
 function initMenuToggle() {
   const menuToggle = document.querySelector(".menu-toggle");
@@ -230,21 +241,15 @@ copyButtons.forEach(button => {
   });
 });
 
-// --- MODIFIED: Back button now only appears on mobile AND non-home pages ---
 function initBackButton() {
   const backBtn = document.getElementById('back-btn');
   if (!backBtn) return;
 
-  // Condition 1: Is it a touch device?
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-  // Condition 2: Is it the homepage?
   const isHomePage = document.querySelector('.home-content');
 
-  // Show the button ONLY if it's a touch device AND not the homepage
   if (isTouchDevice && !isHomePage) {
     backBtn.classList.add('visible');
-
     backBtn.addEventListener('click', (e) => {
       e.preventDefault();
       window.history.back();
@@ -266,7 +271,6 @@ function initLogoTextVisibility() {
 
 // --- BOOT SEQUENCE ---
 window.addEventListener("DOMContentLoaded", () => {
-  // Add homepage class first to prevent flash of content
   const page = window.location.pathname.split("/").pop() || "index.html";
   if (page === "index.html" || page === "") {
     document.body.classList.add('is-homepage');
@@ -319,6 +323,9 @@ window.addEventListener('pageshow', function (event) {
       userLang = savedLang;
       applyDirection();
       applyTranslations();
+      if (typeof window.redrawSpinnerView === "function") {
+        window.redrawSpinnerView();
+      }
       const langToggleBtn = document.getElementById('lang-toggle');
       if (langToggleBtn) {
         langToggleBtn.innerHTML = userLang === "ar" ? "English" : "العربية";

@@ -124,6 +124,8 @@
   --body-padding-medium: 16px;
   --bg-banners: rgba(172, 95, 217, 0.1);
 
+  --spinner-dimension: 300px;
+
   /* Header Height */
   --header-height: 64px;
 

@@ -694,9 +694,66 @@ html[dir="rtl"] .flippable-image {
 .main-content.about {
   background: var(--color-primary-300-G);
 }
+
+.main-content.game-container {
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  /* width: calc(100% - var(--body-padding-large)); */
+  background: var(--bg-primary);
+  gap: 0;
+  .page-header {
+    padding: 0;
+    font-size: 1.25rem;
+  }
+  .page-description {
+    border-bottom: var(--border-style);
+    padding-bottom: var(--body-padding-medium);
+  }
+}
 .main-content.iframe {
   padding: 0 !important;
   gap: 0;
+}
+
+.main-content.card-content {
+  /* height: 100%; */
+  gap: var(--body-padding-medium);
+  padding: var(--body-padding-medium);
+  .image-container {
+    width: 100%;
+    height: 300px;
+    /* padding: var(--body-padding-medium); */
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+    background: var(--color-primary-300-G);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+  .page-sub-header {
+    color: var(--color-primary-400);
+    font-family: var(--font-playpen);
+    font-size: 1.25rem;
+  }
+  .content-label {
+    font-weight: 400;
+    line-height: 1rem;
+  }
+  a {
+    font-weight: 600;
+  }
+  a span {
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+  }
 }
 
 .iframe-container {
@@ -872,7 +929,223 @@ html[dir="rtl"] .flippable-image {
     opacity: 1;
   }
 }
-/* --- HIDE GOOGLE FORM FOOTER END --- */
+
+/* Styles for the new spinner container */
+#spinner-content-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  /* height: 100%; */
+  flex: 1;
+  position: relative;
+  transition: opacity 0.25s ease-in-out; /* The animation */
+}
+
+/* Class to trigger the fade-out */
+#spinner-content-area.is-transitioning {
+  opacity: 0;
+}
+.option-button {
+  padding: var(--cta-padding);
+  margin: 4px 0;
+  background: var(--color-primary-300-G);
+  color: var(--color-primary-300);
+  /* border: solid 1px #efcfff; */
+  border: none;
+  border-radius: var(--cta-radius);
+  font-size: var(--cta-font-size);
+  font-weight: var(--cta-font-weight);
+  width: 210px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cta-gap);
+  font-family: var(--cta-font-family);
+  line-height: normal;
+}
+.option-button i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.suggestion {
+  opacity: 0;
+  animation: fadeIn 0.6s ease forwards;
+  z-index: 2;
+}
+.drink-name {
+  font-size: 1.75rem;
+  font-family: var(--font-playpen);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-primary-300);
+  text-align: center;
+  width: 100%;
+}
+.choice-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: var(--cta-gap);
+  justify-content: center;
+  margin-top: var(--body-padding-medium);
+  opacity: 1;
+  z-index: 2;
+}
+.choice-buttons button {
+  padding: var(--cta-padding);
+  background: var(--color-secondary-300-G);
+  color: var(--color-primary-300);
+  border: none;
+  border-radius: var(--cta-radius);
+  font-size: var(--cta-font-size);
+  font-weight: var(--cta-font-weight);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cta-gap);
+  font-family: var(--cta-font-family);
+  line-height: normal;
+}
+.choice-buttons button i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  opacity: 0.9;
+  animation: explode 1.6s ease-out forwards;
+  /* جديد: التأكد من أنها في الطبقة الصحيحة */
+  z-index: -1;
+}
+.page-title {
+  color: var(--color-black-400);
+  font-size: 0.875rem;
+  font-weight: 800;
+  font-family: var(--font-cairo);
+  text-transform: uppercase;
+}
+
+/* --- Spinner Wheel Styles (Final Version with Precise Origin) --- */
+
+/* الحاوية الرئيسية للعجلة */
+.spinner-wheel-container {
+  width: 100%;
+  flex: 1;
+  margin: var(--body-padding-medium) 0;
+  border-radius: var(--radius-medium);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: scale(0);
+  opacity: 0;
+
+  /* جديد: تحديد نوع وسرعة الانتقال (الأنيميشن) */
+  /* cubic-bezier يعطي تأثيراً ارتدادياً جميلاً */
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease-out;
+}
+
+/* جديد: كلاس يقوم بتكبير العجلة لحجمها الطبيعي */
+.spinner-wheel-container.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* كلاس لإخفاء حاوية العجلة */
+.spinner-wheel-container.hidden {
+  opacity: 0;
+  flex: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+/* تنسيق الصورتين (الدوارة والثابتة) لوضعهما فوق بعض */
+#spinner-wheel,
+#spinner-center {
+  width: 100%;
+  height: 100%;
+  max-width: var(--spinner-dimension);
+  max-height: var(--spinner-dimension);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* تنسيق الصورة الثابتة (الوسطى) للتأكد من أنها في الأعلى */
+#spinner-center {
+  z-index: 2;
+}
+
+/* تنسيق الصورة الدوارة (الخلفية) مع مركز الدوران الصحيح */
+#spinner-wheel {
+  z-index: 1;
+  /* هذا هو التعديل الأهم: تحديد نقطة الدوران بدقة */
+  transform-origin: 50% 59.2%;
+}
+
+/* Ensure skeleton buttons look correct */
+.option-button.skeleton {
+  /* background: var(
+    --skeleton-bg,
+    linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%)
+  ); */
+  border-color: transparent;
+  height: 48px;
+  /* pointer-events: none; */
+}
+/* أنيميشن الدوران */
+@keyframes spinAround {
+  from {
+    transform: rotate(
+      0deg
+    ); /* تم حذف translate من هنا لأنها موجودة في العنصر الأصلي */
+  }
+  to {
+    transform: rotate(1080deg);
+  }
+}
+
+/* الكلاس الذي يقوم بتشغيل الأنيميشن على الصورة الدوارة فقط */
+#spinner-wheel.is-spinning {
+  animation: spinAround 2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* أنيميشن الدوران */
+@keyframes spinAround {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(1080deg);
+  }
+}
+
+/* الكلاس الذي يقوم بتشغيل الأنيميشن على الصورة الدوارة فقط */
+#spinner-wheel.is-spinning {
+  animation: spinAround 2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes explode {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(0.8);
+    opacity: 0;
+  }
+}
 
 /* Responsive Behavior */
 @media (max-width: 800px) {

@@ -35,7 +35,15 @@
     "Swift-Code": "Swift Code",
     "Account-Number": "Account Number",
     "Account-Description": "Account Description",
-    "Bank-Name": "Bank Name"
+    "Bank-Name": "Bank Name",
+    "menuSpinnerTitle": "Menu Spinner",
+    "missionTitle": "Daily Challenge",
+    "menuSpinnerDescription": "Pick your style",
+    "menuSpinnerGame": "Can't decide? Let the game pick for you.",
+    "misionGame": "Check in 2 days, unlock the offer on the 3rd 😎",
+    "gameButton": "Play now",
+    "yogurtDiscount": "Because you deserve a better snack for a better day, now with 10% off 😋",
+    "studentsDiscount": "Student discount all year to back your hustle. Just ask, we got you 🥰"
   },
   "ar": {
     "logoText": "كوفي هت",
@@ -73,6 +81,13 @@
     "Swift-Code": "رمز سويفت",
     "Account-Number": "رقم الحساب",
     "Account-Description": "وصف الحساب",
-    "Bank-Name": "اسم البنك"
+    "Bank-Name": "اسم البنك",
+    "menuSpinnerTitle": "عجلة المنيو",
+    "missionTitle": "تحدي اليوم",
+    "menuSpinnerDescription": "اختار اللي على مزاجك",
+    "misionGame": "تعالى يومين، العرض في اليوم التالت 😎",
+    "gameButton": "العب دلوقتي",
+    "yogurtDiscount": "علشان تستاهل سناك أحلى ليوم أحلى، دلوقتي بخصم 10٪ 😋",
+    "studentsDiscount": "خصم طلاب طول السنة علشان ندعم شغلك وتعبك. بس قولنا، وإحنا معاك 🥰"
   }
 }
