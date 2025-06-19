@@ -744,7 +744,7 @@ html[dir="rtl"] .flippable-image {
   }
   .content-label {
     font-weight: 400;
-    line-height: 1rem;
+    line-height: inherit;
   }
   a {
     font-weight: 600;
