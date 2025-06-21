@@ -227,6 +227,16 @@ i {
   border-radius: var(--cta-radius);
   line-height: inherit;
   background: var(--bg-primary);
+  gap: var(--body-padding-medium);
+  span {
+    width: 100%;
+  }
+  img {
+    height: 24px;
+    width: 24px;
+    filter: invert(5%) sepia(4%) saturate(592%) hue-rotate(202deg)
+      brightness(93%) contrast(93%);
+  }
 }
 
 /* --- FIX: Corrected nested CSS --- */
@@ -464,10 +474,9 @@ html[dir="rtl"] .flippable-image {
 }
 
 .menu-page-banner a {
-  background-color: var(--color-primary-300-G);
+  background-color: var(--color-primary-500);
   border-radius: var(--radius-large);
   padding: 32px 24px 24px;
-  color: var(--color-primary-400);
   font-family: var(--font-playpen);
   text-align: center;
   width: 100%;
@@ -478,12 +487,14 @@ html[dir="rtl"] .flippable-image {
   font-size: 2rem;
   font-weight: 800;
   text-transform: uppercase;
+  color: var(--color-coral-300);
 }
 .menu-page-banner a h6 {
   font-size: 1.125rem;
   font-weight: 600;
   margin-top: -8px;
   text-transform: lowercase;
+  color: var(--color-coral-100);
 }
 .menu-page-banner a h6::first-letter {
   text-transform: uppercase;
@@ -495,9 +506,9 @@ html[dir="rtl"] .flippable-image {
   text-transform: uppercase;
   padding: var(--cta-padding);
   border-radius: var(--cta-radius);
-  background: var(--bg-primary);
-  border: solid 1px var(--color-primary-300);
-  color: var(--color-primary-300);
+  background: var(--color-primary-100);
+  border: none;
+  color: var(--color-primary-500);
   line-height: normal;
 }
 
@@ -723,10 +734,9 @@ html[dir="rtl"] .flippable-image {
   .image-container {
     width: 100%;
     height: 300px;
-    /* padding: var(--body-padding-medium); */
     border-radius: var(--radius-medium);
     overflow: hidden;
-    background: var(--color-primary-300-G);
+    background: var(--color-primary-500);
     position: relative;
     display: flex;
     justify-content: center;
@@ -753,6 +763,10 @@ html[dir="rtl"] .flippable-image {
     width: 100%;
     text-align: center;
     text-transform: uppercase;
+  }
+  .sec-btn {
+    color: var(--color-primary-300);
+    background: var(--color-secondary-300-G);
   }
 }
 
@@ -930,6 +944,17 @@ html[dir="rtl"] .flippable-image {
   }
 }
 
+.error-message {
+  width: 100%;
+  padding: var(--cta-padding);
+  font-size: var(--cta-font-size);
+  font-weight: var(--cta-font-weight);
+  line-height: inherit;
+  font-family: var(--cta-font-family);
+  border-radius: var(--cta-radius);
+  color: red;
+  background: var(--bg-primary);
+}
 /* Styles for the new spinner container */
 #spinner-content-area {
   display: flex;

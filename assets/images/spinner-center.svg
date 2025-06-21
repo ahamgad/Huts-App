@@ -4,18 +4,11 @@
   <defs>
     <style>
       .st0 {
-        stroke: #ac5fe0;
-        stroke-miterlimit: 10;
-        stroke-width: 15px;
-      }
-
-      .st0, .st1 {
-        fill: #894cb3;
+        fill: #ac5fe0;
       }
     </style>
   </defs>
   <g id="Layer_11" focusable="false">
-    <circle class="st1" cx="404.93" cy="479.81" r="102.99"/>
     <path class="st0" d="M404.93,539.81c-33.08,0-60-26.92-60-60s26.92-60,60-60,60,26.92,60,60-26.92,60-60,60Z"/>
   </g>
 </svg>

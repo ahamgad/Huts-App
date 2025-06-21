@@ -77,7 +77,21 @@ function loadMenuData() {
     },
     error: (err) => {
       console.error("CSV parse error:", err);
-      document.getElementById("product-list").innerHTML = `<p>Failed to load menu. Please try again later.</p>`;
+
+      // 1. تحديد لغة الموقع الحالية من الوسم <html>
+      const currentLang = document.documentElement.lang;
+
+      // 2. تعريف رسائل الخطأ باللغتين
+      const errorMessages = {
+        en: "Failed to load menu! Please reload the page",
+        ar: "فشل تحميل القائمة! يرجى إعادة تحميل الصفحة"
+      };
+
+      // 3. اختيار الرسالة المناسبة بناءً على اللغة (مع وضع الإنجليزية كخيار افتراضي)
+      const message = errorMessages[currentLang] || errorMessages.en;
+
+      // 4. عرض الرسالة المختارة في الصفحة
+      document.getElementById("product-list").innerHTML = `<p class'error-message'>${message}</p>`;
 
       if (menuContent) {
         menuContent.classList.remove('noscroll');
