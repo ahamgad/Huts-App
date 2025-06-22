@@ -990,7 +990,7 @@ html[dir="rtl"] .flippable-image {
   border: none;
   border-radius: var(--cta-radius);
   font-size: var(--cta-font-size);
-  font-weight: var(--cta-font-weight);
+  font-weight: 600;
   width: 210px;
   display: flex;
   flex-direction: row;
