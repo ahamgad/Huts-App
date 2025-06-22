@@ -1223,7 +1223,7 @@ html[dir="rtl"] .flippable-image {
 }
 .game-container.mission .card-content.final h3:first-child {
   font-size: 1rem;
-  color: var(--color-black-500);
+  color: var(--color-black-400);
   text-transform: uppercase;
   margin-bottom: 8px;
   font-family: var(--font-cairo);
@@ -1255,7 +1255,7 @@ html[dir="rtl"] .flippable-image {
   /* margin-top: 8px; */
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--color-black-400);
+  color: var(--color-coral-300);
   text-align: center;
   font-family: var(--font-cairo);
 }
@@ -1284,7 +1284,7 @@ html[dir="rtl"] .flippable-image {
 }
 .game-container.mission button {
   padding: var(--cta-padding);
-  margin-top: var(--body-padding-medium);
+  margin-top: 8px;
   background: var(--color-primary-300);
   color: var(--color-black-100);
   border: none;
