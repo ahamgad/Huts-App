@@ -30,9 +30,27 @@
   <div data-include="partials/header.html"></div>
 
   <!-- page-specific content here -->
+  <div data-include="partials/desktop.html"></div>
+  <div class="main-container">
+    <div id="error-msg"></div>
+    <div class="main-content game-container mission">
 
-  <!-- Main JavaScript -->
-  <script src="assets/js/scripts.js" defer></script>
+      <div id="cards"></div>
+      <div class="terms">
+        <div class="terms-content">
+          <i class="fi fi-rr-settings"></i>
+          <span data-i18n-key="missionInstr-1"></span>
+        </div>
+        <div class="terms-content">
+          <i class="fi fi-rr-home-location-alt"></i>
+          <span data-i18n-key="missionInstr-2"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="assets/js/scripts.js" defer></script>
+    <script src="assets/js/mission.js" defer></script>
 </body>
 
 </html>
