@@ -227,15 +227,17 @@ i {
   border-radius: var(--cta-radius);
   line-height: inherit;
   background: var(--bg-primary);
-  gap: var(--body-padding-medium);
+  gap: 8px;
   span {
     width: 100%;
   }
   img {
-    height: 24px;
-    width: 24px;
-    filter: invert(5%) sepia(4%) saturate(592%) hue-rotate(202deg)
-      brightness(93%) contrast(93%);
+    height: 22px;
+    width: 22px;
+    display: flex;
+  }
+  .active {
+    display: none;
   }
 }
 
@@ -247,6 +249,12 @@ i {
 .side-menu a.active {
   color: var(--color-primary-300);
   border-inline-start: 2px solid var(--color-primary-300);
+  img {
+    display: none;
+  }
+  .active {
+    display: flex;
+  }
 }
 .site-footer {
   display: flex;
@@ -953,7 +961,7 @@ html[dir="rtl"] .flippable-image {
   font-family: var(--cta-font-family);
   border-radius: var(--cta-radius);
   color: var(--error-dark);
-  background: var(--error-light);
+  background-color: var(--error-light);
   margin-top: 8px;
 }
 /* Styles for the new spinner container */

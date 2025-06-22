@@ -37,8 +37,26 @@ function loadSpinnerData() {
       updateSpinnerView(getInitialOptionsHtml(), { isInitialLoad: true });
     },
     error: (err) => {
-      console.error("Spinner CSV parse error:", err);
-      spinnerContentArea.innerHTML = `<p>Failed to load spinner data.</p>`;
+      console.error("CSV parse error:", err);
+
+      // 1. تحديد لغة الموقع الحالية من الوسم <html>
+      const currentLang = document.documentElement.lang;
+
+      // 2. تعريف رسائل الخطأ باللغتين
+      const errorMessages = {
+        en: "Failed to fetch data! Please reload the page.",
+        ar: "فشل في جلب البيانات! يرجى إعادة تحميل الصفحة"
+      };
+
+      // 3. اختيار الرسالة المناسبة بناءً على اللغة (مع وضع الإنجليزية كخيار افتراضي)
+      const message = errorMessages[currentLang] || errorMessages.en;
+
+      // 4. عرض الرسالة المختارة في الصفحة
+      document.getElementById("product-list").innerHTML = `<p class="error-message">${message}</p>`;
+
+      if (menuContent) {
+        menuContent.classList.remove('noscroll');
+      }
     },
   });
 }

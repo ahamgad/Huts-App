@@ -83,8 +83,8 @@ function loadMenuData() {
 
       // 2. تعريف رسائل الخطأ باللغتين
       const errorMessages = {
-        en: "Failed to load menu! Please reload the page",
-        ar: "فشل تحميل القائمة! يرجى إعادة تحميل الصفحة"
+        en: "Failed to fetch data! Please reload the page.",
+        ar: "فشل في جلب البيانات! يرجى إعادة تحميل الصفحة"
       };
 
       // 3. اختيار الرسالة المناسبة بناءً على اللغة (مع وضع الإنجليزية كخيار افتراضي)
