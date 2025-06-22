@@ -952,8 +952,9 @@ html[dir="rtl"] .flippable-image {
   line-height: inherit;
   font-family: var(--cta-font-family);
   border-radius: var(--cta-radius);
-  color: red;
-  background: var(--bg-primary);
+  color: var(--error-dark);
+  background: var(--error-light);
+  margin-top: 8px;
 }
 /* Styles for the new spinner container */
 #spinner-content-area {

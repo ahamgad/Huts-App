@@ -91,7 +91,7 @@ function loadMenuData() {
       const message = errorMessages[currentLang] || errorMessages.en;
 
       // 4. عرض الرسالة المختارة في الصفحة
-      document.getElementById("product-list").innerHTML = `<p class'error-message'>${message}</p>`;
+      document.getElementById("product-list").innerHTML = `<p class="error-message">${message}</p>`;
 
       if (menuContent) {
         menuContent.classList.remove('noscroll');
