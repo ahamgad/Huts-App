@@ -56,13 +56,13 @@ const translations = {
 
 // const delay = 86400; // Original Time: 24 hours
 // const finalDelay = 86400;
-const delay = 90; // Test Time: 5 minutes
-const finalDelay = 90;
+const delay = 60; // Test Time: 5 minutes
+const finalDelay = 60;
 
-// const hutLat = 30.08865012314379; // Original Location
-// const hutLng = 31.30396811084656;
-const hutLat = 30.10700900325245; // Test Location
-const hutLng = 31.326854809090072;
+const hutLat = 30.08865012314379; // Original Location
+const hutLng = 31.30396811084656;
+// const hutLat = 30.10700900325245; // Test Location
+// const hutLng = 31.326854809090072;
 const hutRadius = 0.10;
 
 let step = +localStorage.stepIndex || 0;
@@ -113,7 +113,7 @@ function createGiftBox(container) {
 
   const heart = document.createElement('div');
   heart.className = 'heart-icon';
-  heart.innerHTML = '♥';
+  heart.innerHTML = '<svg><path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"/></svg>';
 
   // NEW: Confetti container
   const confetti = document.createElement('div');

@@ -1323,19 +1323,18 @@ html[dir="rtl"] .flippable-image {
   background: var(--color-secondary-300);
 }
 #error-msg {
-  text-align: center;
-  color: var(--error-dark);
-  font-size: 0.875rem;
-  font-weight: 600;
   display: none;
-  font-family: var(--font-cairo);
-  padding: var(--body-padding-medium);
-  background: var(--error-light);
-  border-radius: var(--radius-medium);
-  line-height: 1;
   justify-content: center;
   align-items: center;
   width: 100%;
+  padding: var(--cta-padding);
+  font-size: var(--cta-font-size);
+  font-weight: var(--cta-font-weight);
+  line-height: inherit;
+  font-family: var(--cta-font-family);
+  border-radius: var(--cta-radius);
+  color: var(--error-dark);
+  background-color: var(--error-light);
 }
 
 /* ================================================= */
@@ -1453,8 +1452,10 @@ html[dir="rtl"] .flippable-image {
 /* The heart that comes out */
 .game-container .heart-icon {
   position: absolute;
-  font-size: 48px;
-  color: var(--color-secondary-300); /* Green Color */
+  object-view-box: 0 0 24 24;
+  width: 24px;
+  height: 24px;
+  fill: var(--color-secondary-300); /* Green Color */
   top: 20px;
   left: 50%;
   transform: translateX(-50%) scale(0);
@@ -1488,7 +1489,7 @@ html[dir="rtl"] .flippable-image {
   transform: rotate(-30deg) translateY(-20px) translateX(-10px);
 }
 .game-container .gift-box-flat.is-unlocked .heart-icon {
-  transform: translate(-50%, -40px) scale(1);
+  transform: translate(-50%, -40px) scale(2);
   opacity: 1;
 }
 /* NEW: Lock animation */
