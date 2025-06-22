@@ -12,7 +12,7 @@
         filter: url(#drop-shadow-1);
       }
     </style>
-    <filter id="drop-shadow-1" x="-11" y="22" width="831" height="766" filterUnits="userSpaceOnUse">
+    <filter id="drop-shadow-1" x="-11" y="22" width="831" height="766">
       <feOffset dx="0" dy="0"/>
       <feGaussianBlur result="blur" stdDeviation="5"/>
       <feFlood flood-color="#894cb3" flood-opacity="1"/>
