@@ -203,20 +203,36 @@ function initMenuToggle() {
 /**
  * Adjusts navigation links for GitHub Pages deployment by adding the repo name prefix.
  */
-function adjustLinksForGitHubPages() {
+/**
+ * Adjusts all paths (links and images) for GitHub Pages deployment 
+ * by adding the repo name prefix.
+ */
+function adjustPathsForGitHubPages() {
   const isGitHub = window.location.hostname.includes('github.io');
-  if (!isGitHub) return; // Do nothing if we're on a different server (like Live Server)
+  // If we are not on GitHub Pages (e.g., on Live Server), do nothing.
+  if (!isGitHub) return;
 
   const repoName = '/Huts-App'; // Your repository name
-  const navLinks = document.querySelectorAll('.site-nav a, .side-menu a');
 
-  navLinks.forEach(link => {
+  // 1. Adjust Navigation Links (A tags)
+  document.querySelectorAll('.site-nav a, .side-menu a').forEach(link => {
     const currentHref = link.getAttribute('href');
-    // Only add the prefix if it's a root-relative link and doesn't have it already
-    if (currentHref.startsWith('/') && !currentHref.startsWith(repoName)) {
+    // Check if the link starts with '/' but not with the repo name already
+    if (currentHref && currentHref.startsWith('/') && !currentHref.startsWith(repoName)) {
       link.setAttribute('href', repoName + currentHref);
     }
   });
+
+  // 2. Adjust Header Logo Image (and any other images with this class)
+  // We added id="header-logo" to the image in the HTML
+  const logoImg = document.querySelector('#header-logo');
+  if (logoImg) {
+    const currentSrc = logoImg.getAttribute('src');
+    // Check if the src starts with '/' but not with the repo name already
+    if (currentSrc && currentSrc.startsWith('/') && !currentSrc.startsWith(repoName)) {
+      logoImg.setAttribute('src', repoName + currentSrc);
+    }
+  }
 }
 
 function highlightActiveMenu() {
@@ -354,7 +370,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // --- END OF FIX ---
     // ==================================================================
 
-    adjustLinksForGitHubPages();
+    adjustPathsForGitHubPages();
     initLanguageToggle();
     highlightActiveMenu();
     initMenuToggle();
