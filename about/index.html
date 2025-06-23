@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+  <!-- Google Analytics 4 (gtag.js) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PDZYFK0P93"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-PDZYFK0P93', { 'allow_ad_personalization_signals': true });
+  </script> -->
+
+  <!-- CSS variables & main stylesheet -->
+  <link rel="stylesheet" href="../assets/css/variables.css" />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <!-- Icon library -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" />
+  <!-- Page title -->
+  <title>About Hut</title>
+  <link rel="icon" href="../assets/images/favicon.svg" type="image/svg" sizes="32x32" />
+</head>
+
+<body>
+  <!-- include shared header (nav & mobile menu only) -->
+  <div data-include="../partials/header.html"></div>
+
+  <!-- page-specific content here -->
+  <div data-include="../partials/desktop.html"></div>
+  <div class="main-container">
+    <div class="main-content description about">
+      <h1 data-i18n-key="aboutHeader" class="page-header"></h1>
+      <p data-i18n-key="aboutDescription" class="page-description"></p>
+    </div>
+    <div class="main-content">
+      <h1 data-i18n-key="aboutContactHeader" class="page-sub-header"></h1>
+      <div class="content-container">
+        <h3 data-i18n-key="contactBranch" class="content-label"></h3>
+        <a class="copy-button en">
+          <span class="text-to-copy en">+2022593001</span>
+          <i class="fi fi-rr-duplicate icon-copy"></i>
+          <i class="fi fi-rr-check icon-success"></i>
+        </a>
+        <div data-i18n-key="clickCopy" class="hint"></div>
+      </div>
+      <div class="content-container">
+        <h3 data-i18n-key="sendMessageTitle" class="content-label"></h3>
+        <a href="https://wa.me/message/2HTLVY36VR6KN1" target="_blank"
+          onclick="trackEvent('Social_Click', { cta_name: 'WhatsApp' })" class="sec-btn">
+          <i class="fi fi-rr-comments"></i>
+          <span data-i18n-key="sendMessage"></span>
+        </a>
+      </div>
+    </div>
+    <div class="main-content iframe">
+      <h1 data-i18n-key="aboutLocationHeader" class="page-sub-header iframe"></h1>
+      <div class="iframe-container">
+        <div class="skeleton-loader"></div>
+        <iframe
+          data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3452.1962076812233!2d31.301350275139487!3d30.08856657490143!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14583fe609eb7ef5%3A0x61865efdaf899076!2sCoffee%20Hut!5e0!3m2!1sen!2seg!4v1746993061429!5m2!1sen!2seg"
+          width="100%" height="240" style="border: 0" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript -->
+  <script src="../assets/js/scripts.js" defer></script>
+</body>
+
+</html>

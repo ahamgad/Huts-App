@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+  <!-- Google Analytics 4 (gtag.js) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PDZYFK0P93"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-PDZYFK0P93', { 'allow_ad_personalization_signals': true });
+  </script> -->
+
+  <!-- CSS variables & main stylesheet -->
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+
+  <!-- Include Tabletop.js for Google Sheets integration -->
+  <script src="https://unpkg.com/tabletop@1.5.1/src/tabletop.min.js"></script>
+  <!-- 3) PapaParse for CSV parsing -->
+  <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+  <!-- Icon library -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <!-- Page title -->
+  <title>Spinner Hut</title>
+  <link rel="icon" href="../assets/images/favicon.svg" type="image/svg" sizes="32x32">
+</head>
+
+<body>
+  <!-- include shared header (nav & mobile menu only) -->
+  <div data-include="../partials/header.html"></div>
+
+  <!-- page-specific content here -->
+  <div data-include="../partials/desktop.html"></div>
+  <div class="main-container">
+
+    <div class="main-content game-container">
+      <h1 data-i18n-key="menuSpinnerTitle" class="page-header"></h1>
+      <p data-i18n-key="menuSpinnerDescription" class="page-description"></p>
+      <div class="spinner-wheel-container">
+        <img src="../assets/images/spinner-fidget.svg" id="spinner-wheel" alt="Spinner Wheel">
+        <img src="../assets/images/spinner-center.svg" id="spinner-center" alt="Spinner Center">
+      </div>
+      <div id="spinner-content-area">
+        <div class="option-button skeleton"></div>
+        <div class="option-button skeleton"></div>
+        <div class="option-button skeleton"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Main JavaScript -->
+  <script src="../assets/js/scripts.js" defer></script>
+  <script src="../assets/js/spinner.js" defer></script>
+</body>
+
+</html>
