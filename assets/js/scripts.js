@@ -137,16 +137,13 @@ function initLanguageToggle() {
     applyDirection();
     btn.innerHTML = userLang === "ar" ? "English" : "العربية";
 
-    // This re-renders dynamic content on other pages
     if (typeof window.renderAll === "function") window.renderAll();
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
 
-    // --- NEW: Add this line to redraw the spinner game if it exists ---
     if (typeof window.redrawSpinnerView === "function") {
       window.redrawSpinnerView();
     }
-    // -----------------------------------------------------------------
 
     trackEvent("Language_Toggle", { language_to: userLang });
   });
@@ -203,20 +200,80 @@ function initMenuToggle() {
   });
 }
 
+/**
+ * Adjusts navigation links for GitHub Pages deployment by adding the repo name prefix.
+ */
+function adjustLinksForGitHubPages() {
+  const isGitHub = window.location.hostname.includes('github.io');
+  if (!isGitHub) return; // Do nothing if we're on a different server (like Live Server)
+
+  const repoName = '/Huts-App'; // Your repository name
+  const navLinks = document.querySelectorAll('.site-nav a, .side-menu a');
+
+  navLinks.forEach(link => {
+    const currentHref = link.getAttribute('href');
+    // Only add the prefix if it's a root-relative link and doesn't have it already
+    if (currentHref.startsWith('/') && !currentHref.startsWith(repoName)) {
+      link.setAttribute('href', repoName + currentHref);
+    }
+  });
+}
+
 function highlightActiveMenu() {
-  const page = window.location.pathname.split("/").pop() || "index.html";
-  const menuPages = ["menu.html", "offers.html"];
-  const gamesPages = ["games.html", "mission.html", "spinner.html"];
-  let target;
-  if (menuPages.includes(page)) {
-    target = "menu.html";
-  } else if (gamesPages.includes(page)) {
-    target = "games.html";
-  } else {
-    target = page;
+  // 1. Define which sub-pages belong to which main navigation link
+  const pageGroups = {
+    'menu': ['offers'], // The 'offers' page should highlight the 'menu' link
+    'games': ['mission', 'spinner'] // 'mission' or 'spinner' page highlights the 'games' link
+    // Add other groups here if needed
+  };
+
+  // 2. Get a clean identifier for the CURRENT page
+  const currentPath = window.location.pathname;
+  // This gets the last part of the URL (e.g., "menu", "mission", or "Huts-App" for the homepage on GitHub)
+  let currentPageIdentifier = currentPath.replace(/\/$/, "").split("/").pop();
+
+  // Normalize the homepage identifier to be consistent
+  if (currentPageIdentifier === 'Huts-App' || currentPageIdentifier === '') {
+    currentPageIdentifier = 'home';
   }
+
+  // 3. Determine the final target to highlight
+  //    (e.g., if we are on the "mission" page, the target should become "games")
+  let targetIdentifier = currentPageIdentifier;
+  for (const mainPage in pageGroups) {
+    if (pageGroups[mainPage].includes(currentPageIdentifier)) {
+      targetIdentifier = mainPage; // Set the target to the main page of the group
+      break;
+    }
+  }
+
+  // 4. Loop through all navigation links to find the match
   document.querySelectorAll(".site-nav a, .side-menu a").forEach(link => {
-    link.classList.toggle("active", link.getAttribute("href") === target);
+    // 5. Get a clean identifier for EACH LINK
+    // We use the full href to handle both local and deployed environments correctly
+    const linkPath = new URL(link.href).pathname;
+    let linkIdentifier = linkPath.replace(/\/$/, "").split("/").pop();
+
+    // Normalize the homepage link's identifier
+    if (linkIdentifier === 'Huts-App' || linkIdentifier === '') {
+      linkIdentifier = 'home';
+    }
+
+    // In the HTML for the homepage link, we use href="/".
+    // This results in an empty identifier, so we handle it explicitly.
+    // The link to the homepage should point to "/" in the header.html partial.
+    // e.g., <a href="/">Home</a>
+    if (link.getAttribute('href') === '/') {
+      linkIdentifier = 'home';
+    }
+
+
+    // 6. Compare the page's target identifier with the link's identifier
+    if (linkIdentifier === targetIdentifier) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
   });
 }
 
@@ -244,10 +301,8 @@ copyButtons.forEach(button => {
 function initBackButton() {
   const backBtn = document.getElementById('back-btn');
   if (!backBtn) return;
-
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const isHomePage = document.querySelector('.home-content');
-
   if (isTouchDevice && !isHomePage) {
     backBtn.classList.add('visible');
     backBtn.addEventListener('click', (e) => {
@@ -260,10 +315,8 @@ function initBackButton() {
 function initLogoTextVisibility() {
   const logoText = document.querySelector('.logo-text');
   if (!logoText) return;
-
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const isHomePage = document.querySelector('.home-content');
-
   if (isTouchDevice && !isHomePage) {
     logoText.classList.add('hidden-on-mobile');
   }
@@ -271,13 +324,25 @@ function initLogoTextVisibility() {
 
 // --- BOOT SEQUENCE ---
 window.addEventListener("DOMContentLoaded", () => {
-  const page = window.location.pathname.split("/").pop() || "index.html";
-  if (page === "index.html" || page === "") {
+  if (window.location.pathname === '/Huts-App/' || window.location.pathname === '/Huts-App/index.html' || window.location.pathname === '/') {
     document.body.classList.add('is-homepage');
   }
 
   includeHTML().then(() => {
-    fetch("assets/i18n/translations.json")
+    // ==================================================================
+    // --- START OF FIX: Dynamic path for translations.json ---
+    // ==================================================================
+
+    // Determine the correct base path depending on the page depth.
+    // This works for both Live Server (root is '/') and GitHub Pages (root is '/Huts-App/').
+    const pathSegments = window.location.pathname.split('/').filter(segment => segment).length;
+    const isGitHubPages = window.location.hostname.includes('github.io');
+
+    // On GitHub, a sub-page has more than 1 segment. On Live Server, a sub-page has more than 0 segments.
+    const isSubPage = isGitHubPages ? pathSegments > 1 : pathSegments > 0;
+    const basePath = isSubPage ? '../' : '';
+
+    fetch(`${basePath}assets/i18n/translations.json`)
       .then(res => res.json())
       .then(data => {
         allTranslations = data;
@@ -285,6 +350,11 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .catch(err => console.error("Error loading translations:", err));
 
+    // ==================================================================
+    // --- END OF FIX ---
+    // ==================================================================
+
+    adjustLinksForGitHubPages();
     initLanguageToggle();
     highlightActiveMenu();
     initMenuToggle();
