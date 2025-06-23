@@ -153,29 +153,63 @@ function initLanguageToggle() {
 function initMenuToggle() {
   const menuToggle = document.querySelector(".menu-toggle");
   const sideMenu = document.querySelector(".side-menu");
+
+  // --- CORRECTED: Only check for essential elements to prevent the function from exiting ---
+  if (!menuToggle || !sideMenu) {
+    // If we can't find the button or the menu, there's nothing to do.
+    return;
+  }
+
+  // These elements are optional and will be checked for later.
   const closeBtn = document.querySelector(".close-menu");
   const themeColorMeta = document.getElementById('theme-color-meta');
-
-  if (!menuToggle || !sideMenu || !closeBtn) return;
+  const overlay = document.querySelector(".side-menu-overlay");
+  const menuTabs = document.querySelector('.menu-tabs');
 
   const openMenu = () => {
     sideMenu.classList.add("open");
+    // Only affect the overlay if it exists
+    if (overlay) overlay.classList.add("open");
+
     if (themeColorMeta) {
       themeColorMeta.setAttribute('content', '#f8f9fa');
     }
+
+    // Only affect menuTabs if it exists on the page
+    if (menuTabs) {
+      menuTabs.style.zIndex = 'auto';
+    }
+
     trackEvent("Menu_Toggle", { action: "open" });
   };
 
   const closeMenu = () => {
     sideMenu.classList.remove("open");
+    // Only affect the overlay if it exists
+    if (overlay) overlay.classList.remove("open");
+
     if (themeColorMeta) {
       themeColorMeta.setAttribute('content', '#ffffff');
     }
+
+    // Only affect menuTabs if it exists on the page
+    if (menuTabs) {
+      menuTabs.style.zIndex = '';
+    }
+
     trackEvent("Menu_Toggle", { action: "close" });
   };
 
+  // Now, we can safely add the event listener
   menuToggle.addEventListener("click", openMenu);
-  closeBtn.addEventListener("click", closeMenu);
+
+  // Add listeners for other elements only if they exist
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeMenu);
+  }
+  if (overlay) {
+    overlay.addEventListener("click", closeMenu);
+  }
 
   document.addEventListener("click", (e) => {
     if (
@@ -375,6 +409,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (typeof loadMenuData === "function") {
       loadMenuData();
     }
+
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
   });

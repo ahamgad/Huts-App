@@ -1,23 +1,23 @@
-// menu.js
+// ===============================================
+// menu.js - FINAL VERSION WITH UNITS
+// ===============================================
+
+// Make functions globally accessible
+window.loadMenuData = loadMenuData;
+window.renderAll = renderAll;
 
 let groupedData = null;
 
-/**
- * Renders a skeleton loading state.
- */
 function renderSkeletonLoader() {
   const tabsContainer = document.getElementById("tabs-container");
   const productList = document.getElementById("product-list");
-
   tabsContainer.innerHTML = "";
   productList.innerHTML = "";
-
   for (let i = 0; i < 5; i++) {
     const skeletonTab = document.createElement("div");
     skeletonTab.className = "skeleton skeleton-tab";
     tabsContainer.appendChild(skeletonTab);
   }
-
   for (let i = 0; i < 3; i++) {
     const section = document.createElement("div");
     section.className = "skeleton-section";
@@ -37,20 +37,11 @@ function renderSkeletonLoader() {
   }
 }
 
-/**
- * Fetches and parses the CSV data from Google Sheets.
- * It now prevents scrolling and hides the footer while loading.
- */
 function loadMenuData() {
   const menuContent = document.querySelector('.menu-content');
-  if (menuContent) {
-    menuContent.classList.add('noscroll');
-  }
-
+  if (menuContent) menuContent.classList.add('noscroll');
   renderSkeletonLoader();
-
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vROZEd2FRFZXsGihkUTQPCpBXMwwkMwBioYoemaBX1P8XYWhUQqpw4yA8s4E-plSlbPAxeb5i3bkFEU/pub?gid=0&single=true&output=csv";
-
   Papa.parse(SHEET_CSV_URL, {
     download: true,
     header: true,
@@ -58,126 +49,82 @@ function loadMenuData() {
     complete: (results) => {
       groupedData = {};
       results.data.forEach((r) => {
-        if (!groupedData[r.category_id]) groupedData[r.category_id] = [];
-        groupedData[r.category_id].push(r);
+        if (r.category_id && !groupedData[r.category_id]) groupedData[r.category_id] = [];
+        if (r.category_id) groupedData[r.category_id].push(r);
       });
       renderAll();
-
-      // --- جديد: إظهار الفوتر بعد عرض المحتوى ---
       const footer = document.querySelector('.menu-page-footer');
-      if (footer) {
-        // نستخدم 'flex' لأن هذا هو نوع العرض الافتراضي للفوتر في ملف CSS
-        footer.style.display = 'flex';
-      }
-      // ------------------------------------
-
-      if (menuContent) {
-        menuContent.classList.remove('noscroll');
-      }
+      if (footer) footer.style.display = 'flex';
+      if (menuContent) menuContent.classList.remove('noscroll');
+      initProductSheetLogic();
     },
     error: (err) => {
       console.error("CSV parse error:", err);
-
-      // 1. تحديد لغة الموقع الحالية من الوسم <html>
       const currentLang = document.documentElement.lang;
-
-      // 2. تعريف رسائل الخطأ باللغتين
       const errorMessages = {
         en: "Failed to fetch data! Please reload the page.",
         ar: "فشل في جلب البيانات! يرجى إعادة تحميل الصفحة"
       };
-
-      // 3. اختيار الرسالة المناسبة بناءً على اللغة (مع وضع الإنجليزية كخيار افتراضي)
       const message = errorMessages[currentLang] || errorMessages.en;
-
-      // 4. عرض الرسالة المختارة في الصفحة
       document.getElementById("product-list").innerHTML = `<p class="error-message">${message}</p>`;
-
-      if (menuContent) {
-        menuContent.classList.remove('noscroll');
-      }
+      if (menuContent) menuContent.classList.remove('noscroll');
     },
   });
 }
 
-/**
- * Main render function. Now it also re-initializes the scroll spy.
- */
 function renderAll() {
   if (!groupedData) return;
-  renderTabs(groupedData);
-  renderProducts(groupedData);
-  if (typeof initScrollSpy === "function") {
-    setTimeout(initScrollSpy, 100);
-  }
+  const lang = document.documentElement.lang || 'en';
+  renderTabs(groupedData, lang);
+  renderProducts(groupedData, lang);
+  if (typeof initScrollSpy === "function") setTimeout(initScrollSpy, 100);
 }
 
-/**
- * Renders category tabs with conditional logic for click events.
- */
-function renderTabs(data) {
+function renderTabs(data, lang) {
   const tabsContainer = document.getElementById("tabs-container");
   tabsContainer.innerHTML = "";
   Object.keys(data).forEach((catId, i) => {
     const sample = data[catId][0];
-    const label = userLang === "ar" ? sample.cat_ar : sample.cat_en;
-
+    const label = lang === "ar" ? sample.cat_ar : sample.cat_en;
     const link = document.createElement("a");
     link.className = "tab-btn";
-    if (i === 0) {
-      link.classList.add("active");
-    }
+    if (i === 0) link.classList.add("active");
     link.textContent = label;
     link.href = `#${catId}`;
-
     link.addEventListener('click', (e) => {
-      e.preventDefault(); // Prevent default jump to control behavior
-
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      e.preventDefault();
       const categoryId = e.currentTarget.href.split('#')[1];
-
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        // --- MOBILE BEHAVIOR: Instant Jump with Offset ---
         const section = document.getElementById(categoryId);
         const container = document.querySelector('.menu-content');
         const tabsContainer = document.querySelector('.menu-tabs');
-
         if (section && container) {
           const offset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 20;
           const targetY = section.offsetTop - offset;
-
-          isProgrammaticScroll = true;
-          setActiveTab(categoryId);
-
-          container.scrollTo({
-            top: targetY,
-            behavior: "auto"
-          });
-
-          setTimeout(() => { isProgrammaticScroll = false; }, 300);
+          window.isProgrammaticScroll = true;
+          if (typeof setActiveTab === 'function') setActiveTab(categoryId);
+          container.scrollTo({ top: targetY, behavior: "auto" });
+          setTimeout(() => { window.isProgrammaticScroll = false; }, 300);
         }
       } else {
-        // --- DESKTOP BEHAVIOR: Smooth Scroll ---
-        scrollToCategory(categoryId);
+        if (typeof scrollToCategory === 'function') scrollToCategory(categoryId);
       }
     });
-
     tabsContainer.append(link);
   });
 }
 
-/**
- * Renders product cards (this function remains the same).
- */
-function renderProducts(data) {
+function renderProducts(data, lang) {
   const list = document.getElementById("product-list");
   list.innerHTML = "";
+  list.className = 'product-list menu-items-container';
   Object.entries(data).forEach(([catId, items]) => {
     const section = document.createElement("section");
     section.id = catId;
     section.className = "category-section";
     const sample = items[0];
-    const title = userLang === "ar" ? sample.cat_ar : sample.cat_en;
+    const title = lang === "ar" ? sample.cat_ar : sample.cat_en;
     const iconUrl = sample.img_url;
     const headerDiv = document.createElement("div");
     headerDiv.className = "category-header";
@@ -186,10 +133,21 @@ function renderProducts(data) {
     const productsDiv = document.createElement("div");
     productsDiv.className = "products";
     items.forEach((r) => {
-      const name = userLang === "ar" ? r.item_ar : r.item_en;
+      const name = lang === "ar" ? r.item_ar : r.item_en;
       const price = r.price;
       const card = document.createElement("div");
-      card.className = "product-card";
+      card.className = "product-card product-item";
+
+      card.setAttribute('data-name-en', r.item_en ?? '');
+      card.setAttribute('data-name-ar', r.item_ar ?? '');
+      card.setAttribute('data-ingredients-en', r.ingredients_en ?? '');
+      card.setAttribute('data-ingredients-ar', r.ingredients_ar ?? '');
+      card.setAttribute('data-calories', r.calories ?? '-');
+      card.setAttribute('data-fat', r.fat_g ?? '-');
+      card.setAttribute('data-carbs', r.carbs_g ?? '-');
+      card.setAttribute('data-protein', r.protein_g ?? '-');
+      card.setAttribute('data-caffeine', r.caffeine_mg ?? '-');
+
       card.innerHTML = `<h3>${name}</h3><p>${price}</p>`;
       productsDiv.append(card);
     });
@@ -198,32 +156,99 @@ function renderProducts(data) {
   });
 }
 
-/**
- * Smooth scrolls to a category. This is now for DESKTOP ONLY.
- */
-function scrollToCategory(catId) {
-  const section = document.getElementById(catId);
-  const container = document.querySelector(".menu-content");
-  if (!section || !container) return;
+// =============================================
+// --- NUTRITION BOTTOM SHEET LOGIC ---
+// =============================================
+function initProductSheetLogic() {
+  const sheetLabels = {
+    en: { ingredients: "Ingredients", nutrition: "Nutritional Facts", calories: "Calories", fat: "Fat", carbs: "Carbs", protein: "Protein", caffeine: "Caffeine" },
+    ar: { ingredients: "المكونات", nutrition: "القيم الغذائية", calories: "السعرات الحرارية", fat: "الدهون", carbs: "الكربوهيدرات", protein: "البروتين", caffeine: "الكافيين" }
+  };
+  const menuContainer = document.getElementById('product-list');
+  const sheet = document.getElementById('nutrition-sheet');
+  const overlay = document.getElementById('nutrition-overlay');
+  const closeBtn = document.getElementById('close-sheet-btn');
 
-  isProgrammaticScroll = true;
-  setActiveTab(catId);
+  if (!menuContainer || !sheet || !overlay || !closeBtn) return;
 
-  const tabsContainer = document.querySelector(".menu-tabs");
-  const offset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 20;
-  const targetY = section.offsetTop - offset;
+  const productNameEl = document.getElementById('sheet-product-name');
+  const ingredientsWrapperEl = document.getElementById('sheet-ingredients-wrapper');
+  const productIngredientsEl = document.getElementById('sheet-product-ingredients');
+  const nutritionListEl = document.getElementById('sheet-nutrition-list');
+  const ingredientsTitleEl = document.querySelector('.sheet-ingredients h4');
+  const nutritionTitleEl = document.querySelector('.sheet-nutrition h4');
 
-  container.scrollTo({
-    top: targetY,
-    behavior: "smooth",
+  const openSheet = (productData) => {
+    const lang = document.documentElement.lang || 'en';
+    const labels = sheetLabels[lang];
+
+    productNameEl.textContent = productData[lang === 'ar' ? 'nameAr' : 'nameEn'] || productData.nameEn;
+
+    const ingredientsText = productData[lang === 'ar' ? 'ingredientsAr' : 'ingredientsEn'] || '';
+    if (ingredientsText && ingredientsText.trim() !== '' && ingredientsText.trim() !== '-') {
+      ingredientsWrapperEl.style.display = 'block';
+      productIngredientsEl.textContent = ingredientsText;
+      ingredientsTitleEl.textContent = labels.ingredients;
+    } else {
+      ingredientsWrapperEl.style.display = 'none';
+    }
+
+    nutritionTitleEl.textContent = labels.nutrition;
+    nutritionListEl.innerHTML = '';
+    const nutritionData = [
+      { label: labels.calories, value: productData.calories }, { label: labels.fat, value: productData.fat },
+      { label: labels.carbs, value: productData.carbs }, { label: labels.protein, value: productData.protein },
+      { label: labels.caffeine, value: productData.caffeine }
+    ];
+
+    nutritionData.forEach(item => {
+      const li = document.createElement('li');
+
+      // --- START OF FINAL MODIFICATION: Add units ---
+      let unit = '';
+      if (item.value !== '-' && item.value) { // Only add units if there is a real value
+        const currentLang = document.documentElement.lang || 'en';
+        switch (item.label) {
+          case labels.fat:
+          case labels.carbs:
+          case labels.protein:
+            unit = currentLang === 'ar' ? ' جم' : ' g'; // جم = gram
+            break;
+          case labels.caffeine:
+            unit = currentLang === 'ar' ? ' ملجم' : ' mg'; // ملجم = milligram
+            break;
+          // No unit for calories
+        }
+      }
+      // --- END OF FINAL MODIFICATION ---
+
+      const valueDisplay = item.value === '-' || !item.value ? '-' : `${item.value}${unit}`;
+      li.innerHTML = `<span class="label">${item.label}</span><span class="value">${valueDisplay}</span>`;
+      nutritionListEl.appendChild(li);
+    });
+    sheet.classList.add('is-open');
+    overlay.classList.add('is-open');
+    document.body.classList.add('noscroll');
+    document.documentElement.classList.add('noscroll');
+  };
+
+  const closeSheet = () => {
+    sheet.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    document.body.classList.remove('noscroll');
+    document.documentElement.classList.remove('noscroll');
+  };
+
+  menuContainer.addEventListener('click', (event) => {
+    const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (!isMobile) return;
+    const productItem = event.target.closest('.product-item');
+    if (productItem) {
+      event.preventDefault();
+      openSheet(productItem.dataset);
+    }
   });
 
-  clearTimeout(scrollTimeout);
-  scrollTimeout = setTimeout(() => {
-    isProgrammaticScroll = false;
-  }, 1000); // 1-second timeout for the animation
+  closeBtn.addEventListener('click', closeSheet);
+  overlay.addEventListener('click', closeSheet);
 }
-
-// Expose globals for other scripts
-window.loadMenuData = loadMenuData;
-window.renderAll = renderAll;

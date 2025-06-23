@@ -45,7 +45,11 @@
     "yogurtDiscount": "Because you deserve a better snack for a better day, now with 10% off 😋",
     "studentsDiscount": "Student discount all year to back your hustle. Just ask, we got you 🥰",
     "missionInstr-1": "Allow location access when prompted",
-    "missionInstr-2": "Be inside the Coffee Hut"
+    "missionInstr-2": "Be inside the Coffee Hut",
+    "error404Title": "Oops!",
+    "error404SubTitle": "Page Not Found",
+    "error404Description": "This content took a coffee break",
+    "error404Button": "Go to Homepage"
   },
   "ar": {
     "logoText": "كوفي هت",
@@ -93,6 +97,10 @@
     "yogurtDiscount": "علشان تستاهل سناك أحلى ليوم أحلى، دلوقتي بخصم 10% 😋",
     "studentsDiscount": "خصم طلاب طول السنة علشان ندعم شغلك وتعبك. بس قولنا، وإحنا معاك 🥰",
     "missionInstr-1": "اسمح بالوصول إلى الموقع عندما يُطلب منك ذلك",
-    "missionInstr-2": "كن داخل مقهى كوفي هت"
+    "missionInstr-2": "كن داخل مقهى كوفي هت",
+    "error404Title": "عفوًا!",
+    "error404SubTitle": "هذه الصفحة غير متوفرة",
+    "error404Description": "هذا المحتوى أخذ استراحة قهوة",
+    "error404Button": "الصفحة الرئيسية"
   }
 }

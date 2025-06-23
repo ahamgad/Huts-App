@@ -19,7 +19,14 @@ body {
   display: flex;
   align-items: center;
 }
-
+body.error {
+  padding: var(--body-padding-large);
+}
+/* A more robust way to prevent background scroll */
+body.noscroll,
+html.noscroll {
+  overflow: hidden;
+}
 button {
   cursor: pointer;
   line-height: 1;
@@ -40,7 +47,7 @@ i {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 900;
   height: var(--header-height);
 }
 .site-header .container {
@@ -171,7 +178,7 @@ i {
   transition: 0.3s ease;
   padding: var(--body-padding-large);
   overflow-y: auto;
-  z-index: 1100;
+  z-index: 9999;
 }
 .side-menu.open {
   inset-inline-end: 0;
@@ -433,7 +440,7 @@ html[dir="rtl"] .flippable-image {
   position: sticky;
   top: 0;
   background-color: var(--bg-secondary);
-  z-index: 900;
+  z-index: 35;
   display: flex;
   align-items: center;
   width: 100%;
@@ -694,6 +701,51 @@ html[dir="rtl"] .flippable-image {
   overflow-x: hidden;
   padding: 0 !important;
   display: block;
+}
+.main-container.error {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--body-padding-large) !important;
+  gap: 0 !important;
+  text-align: center;
+  background: var(--bg-primary);
+  border: var(--border-style);
+  border-radius: var(--radius-large);
+  img {
+    width: 120px;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 3.5rem;
+    color: var(--color-primary-500);
+    font-family: var(--font-playpen);
+  }
+  h3 {
+    font-size: 1.25rem;
+    color: var(--color-black-500);
+    font-family: var(--font-cairo);
+    line-height: 1;
+    margin-top: 8px;
+  }
+  p {
+    font-size: 1rem;
+    color: var(--color-black-400);
+    line-height: normal;
+    font-family: var(--font-cairo);
+    margin: 8px 0 16px;
+  }
+  a {
+    font-family: var(--cta-font-family);
+    font-size: var(--cta-font-size);
+    font-weight: var(--cta-font-weight);
+    padding: var(--cta-padding);
+    border-radius: var(--cta-radius);
+    background: var(--color-primary-300);
+    border: none;
+    color: var(--color-black-100);
+    line-height: normal;
+  }
 }
 .main-content {
   width: 100%;
@@ -1538,6 +1590,125 @@ html[dir="rtl"] .flippable-image {
   }
 }
 
+/* =================================== */
+/* Bottom Sheet Styles               */
+/* =================================== */
+
+/* The semi-transparent background overlay */
+.bottom-sheet-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 999;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.bottom-sheet-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* The sheet itself */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-large) var(--radius-large) 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: var(--body-padding-medium);
+}
+
+.bottom-sheet.is-open {
+  transform: translateY(0);
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--body-padding-medium) 8px;
+  border-bottom: var(--border-style);
+  position: sticky;
+  gap: var(--body-padding-medium);
+  top: 0;
+  background: var(--bg-primary);
+}
+
+.sheet-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-black-400);
+  font-family: var(--font-cairo);
+  /* line-height: 1; */
+}
+
+.close-sheet {
+  background: none;
+  border: none;
+  font-size: 1.75em;
+  line-height: 1;
+  color: var(--color-black-400);
+  /* margin-top: -8px; */
+}
+
+.sheet-content {
+  font-family: var(--font-cairo);
+}
+
+.sheet-content h4 {
+  font-size: 1rem;
+  margin-top: var(--body-padding-medium);
+  margin-bottom: 8px;
+  display: inline-block;
+  color: var(--color-primary-400);
+}
+#sheet-product-ingredients {
+  font-size: 0.875rem;
+  color: var(--color-black-500);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+#sheet-nutrition-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#sheet-nutrition-list li {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  border-bottom: var(--border-style);
+}
+#sheet-nutrition-list li:last-child {
+  border-bottom: none;
+}
+
+#sheet-nutrition-list .label {
+  color: var(--color-black-500);
+  font-weight: 600;
+}
+
+#sheet-nutrition-list .value {
+  color: var(--color-black-500);
+}
+
 /* ================================================= */
 /* Responsive Behavior (Media Tag 800px) */
 /* ================================================= */
@@ -1558,6 +1729,7 @@ html[dir="rtl"] .flippable-image {
     border-bottom: var(--border-style);
     background-color: var(--bg-primary);
     padding: 0 var(--body-padding-medium) 8px;
+    z-index: 901;
   }
   .site-header .container {
     padding: 0 var(--body-padding-medium);
