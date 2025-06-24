@@ -1703,14 +1703,14 @@ html[dir="rtl"] .flippable-image {
 }
 .product-title-wrapper h3 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-black-400);
+  color: var(--color-black-500);
   font-family: var(--font-cairo);
   line-height: 1;
 }
 .product-title-wrapper p {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-black-400);
   font-family: var(--font-cairo);

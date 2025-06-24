@@ -371,38 +371,45 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   includeHTML().then(() => {
-    // ==================================================================
-    // --- START OF FIX: Dynamic path for translations.json ---
-    // ==================================================================
+    // --- START OF FIX for 404 page translations ---
 
-    // Determine the correct base path depending on the page depth.
-    // This works for both Live Server (root is '/') and GitHub Pages (root is '/Huts-App/').
-    const pathSegments = window.location.pathname.split('/').filter(segment => segment).length;
-    const isGitHubPages = window.location.hostname.includes('github.io');
+    // 1. Dynamically determine the absolute base path for assets.
+    const isGitHub = window.location.hostname.includes('github.io');
+    const repoName = '/Huts-App';
+    const siteBasePath = isGitHub ? repoName : '';
 
-    // On GitHub, a sub-page has more than 1 segment. On Live Server, a sub-page has more than 0 segments.
-    const isSubPage = isGitHubPages ? pathSegments > 1 : pathSegments > 0;
-    const basePath = isSubPage ? '../' : '';
+    // 2. Construct the absolute path to the translations file.
+    const translationsPath = `${siteBasePath}/assets/i18n/translations.json`;
 
-    fetch(`${basePath}assets/i18n/translations.json`)
-      .then(res => res.json())
+    // 3. Use the new absolute path in the fetch call.
+    fetch(translationsPath)
+      .then(res => {
+        if (!res.ok) throw new Error(`Failed to fetch translations from ${translationsPath}`);
+        return res.json();
+      })
       .then(data => {
         allTranslations = data;
         applyTranslations();
       })
-      .catch(err => console.error("Error loading translations:", err));
+      .catch(err => console.error(err));
 
-    // ==================================================================
     // --- END OF FIX ---
-    // ==================================================================
 
-    adjustPathsForGitHubPages();
+    // The rest of the functions will now run correctly
     initLanguageToggle();
     highlightActiveMenu();
     initMenuToggle();
     initIframeSkeletons();
     initBackButton();
     initLogoTextVisibility();
+
+    if (document.querySelector(".menu-content")) {
+      initScrollSpy();
+      initManualScrollDetection();
+    }
+    if (typeof loadMenuData === "function") {
+      loadMenuData();
+    }
 
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
