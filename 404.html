@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#ffffff" id="theme-color-meta">
   <script>
     const isGitHub = window.location.hostname.includes('github.io');
-    const repoName = '/Huts-App/'; // Your repository name
+    const repoName = '/Huts-App/';
     const basePath = isGitHub ? repoName : '/';
     document.write(`<base href="${basePath}">`);
   </script>
@@ -47,51 +47,27 @@
 
   <!-- Main JavaScript -->
   <script src="assets/js/scripts.js" defer></script>
-  <script>includeHTML().then(() => {
-      // --- START OF FIX for 404 page translations ---
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // This logic is now self-contained within the 404 page
+      const lang = localStorage.getItem("preferredLanguage") || (navigator.language.startsWith("ar") ? "ar" : "en");
+      const translationsPath = "assets/i18n/translations.json"; // The <base> tag will fix this path
 
-      // 1. Dynamically determine the absolute base path for assets.
-      const isGitHub = window.location.hostname.includes('github.io');
-      const repoName = '/Huts-App';
-      const siteBasePath = isGitHub ? repoName : '';
-
-      // 2. Construct the absolute path to the translations file.
-      const translationsPath = `${siteBasePath}/assets/i18n/translations.json`;
-
-      // 3. Use the new absolute path in the fetch call.
       fetch(translationsPath)
         .then(res => {
-          if (!res.ok) throw new Error(`Failed to fetch translations from ${translationsPath}`);
+          if (!res.ok) throw new Error('Failed to fetch translations for 404 page');
           return res.json();
         })
-        .then(data => {
-          allTranslations = data;
-          applyTranslations();
+        .then(translations => {
+          const dict = translations[lang] || {};
+          document.querySelectorAll("[data-i18n-key]").forEach(el => {
+            const key = el.getAttribute("data-i18n-key");
+            if (dict[key]) el.textContent = dict[key];
+          });
         })
         .catch(err => console.error(err));
-
-      // --- END OF FIX ---
-
-
-      // The rest of the functions will now run correctly
-      initLanguageToggle();
-      highlightActiveMenu();
-      initMenuToggle();
-      initIframeSkeletons();
-      initBackButton();
-      initLogoTextVisibility();
-
-      if (document.querySelector(".menu-content")) {
-        initScrollSpy();
-        initManualScrollDetection();
-      }
-      if (typeof loadMenuData === "function") {
-        loadMenuData();
-      }
-
-      if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
-      if (document.getElementById("events-wrapper")) loadDynamicForm("events");
-    });</script>
+    });
+  </script>
 </body>
 
 </html>
