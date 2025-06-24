@@ -331,3 +331,33 @@ function initProductSheetLogic() {
   closeBtn.addEventListener('click', closeSheet);
   overlay.addEventListener('click', closeSheet);
 }
+
+/**
+ * Smooth scrolls to a category. This is for DESKTOP ONLY.
+ */
+function scrollToCategory(catId) {
+  const section = document.getElementById(catId);
+  const container = document.querySelector(".menu-content");
+  if (!section || !container) return;
+
+  // These global variables are defined in scripts.js, so we access them via the window object
+  window.isProgrammaticScroll = true;
+
+  if (typeof setActiveTab === 'function') {
+    setActiveTab(catId);
+  }
+
+  const tabsContainer = document.querySelector(".menu-tabs");
+  const offset = (tabsContainer ? tabsContainer.offsetHeight : 50) + 20;
+  const targetY = section.offsetTop - offset;
+
+  container.scrollTo({
+    top: targetY,
+    behavior: "smooth",
+  });
+
+  clearTimeout(window.scrollTimeout);
+  window.scrollTimeout = setTimeout(() => {
+    window.isProgrammaticScroll = false;
+  }, 1000); // 1-second timeout for the animation
+}

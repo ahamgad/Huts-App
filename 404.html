@@ -6,6 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+  <script>
+    const isGitHub = window.location.hostname.includes('github.io');
+    const repoName = '/Huts-App/'; // Your repository name
+    const basePath = isGitHub ? repoName : '/';
+    document.write(`<base href="${basePath}">`);
+  </script>
   <!-- Google Analytics 4 (gtag.js) -->
   <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PDZYFK0P93"></script>
   <script>
@@ -16,13 +22,13 @@
   </script> -->
 
   <!-- CSS variables & main stylesheet -->
-  <link rel="stylesheet" href="/assets/css/variables.css" />
-  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
   <!-- Icon library -->
   <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" />
   <!-- Page title -->
   <title>Page Not Found | Coffee Hut</title>
-  <link rel="icon" href="/assets/images/favicon.svg" type="image/svg" sizes="32x32" />
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg" sizes="32x32" />
 </head>
 
 <body class="error">
@@ -30,7 +36,7 @@
 
 
   <div class="main-container error">
-    <img src="/assets/images/404.svg" alt="404 Not Found">
+    <img src="assets/images/404.svg" alt="404 Not Found">
 
     <h1 data-i18n-key="error404Title"></h1>
     <h3 data-i18n-key="error404SubTitle"></h3>
@@ -40,7 +46,7 @@
   </div>
 
   <!-- Main JavaScript -->
-  <script src="/assets/js/scripts.js" defer></script>
+  <script src="assets/js/scripts.js" defer></script>
 </body>
 
 </html>
