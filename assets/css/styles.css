@@ -1669,14 +1669,24 @@ html[dir="rtl"] .flippable-image {
   top: 0;
   background: var(--bg-primary);
 }
-
-.sheet-header h3 {
+.product-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.product-title-wrapper h3 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--color-black-400);
   font-family: var(--font-cairo);
   /* line-height: 1; */
+}
+.product-title-wrapper p {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--color-primary-400);
+  font-family: var(--font-cairo);
 }
 
 .close-sheet {

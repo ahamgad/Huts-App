@@ -148,7 +148,10 @@ function renderProducts(data, lang) {
       card.setAttribute('data-protein', r.protein_g ?? '-');
       card.setAttribute('data-caffeine', r.caffeine_mg ?? '-');
 
-      card.innerHTML = `<h3>${name}</h3><p>${price}</p>`;
+      // --- NEW: Add price to data attributes ---
+      card.setAttribute('data-price', r.price ?? '-');
+
+      card.innerHTML = `<h3>${name}</h3><p>EGP ${price}</p>`; // Added EGP for clarity here too
       productsDiv.append(card);
     });
     section.append(productsDiv);
@@ -172,6 +175,9 @@ function initProductSheetLogic() {
   if (!menuContainer || !sheet || !overlay || !closeBtn) return;
 
   const productNameEl = document.getElementById('sheet-product-name');
+  // --- NEW: Select the new price element ---
+  const productPriceEl = document.getElementById('sheet-product-price');
+
   const ingredientsWrapperEl = document.getElementById('sheet-ingredients-wrapper');
   const productIngredientsEl = document.getElementById('sheet-product-ingredients');
   const nutritionListEl = document.getElementById('sheet-nutrition-list');
@@ -183,6 +189,15 @@ function initProductSheetLogic() {
     const labels = sheetLabels[lang];
 
     productNameEl.textContent = productData[lang === 'ar' ? 'nameAr' : 'nameEn'] || productData.nameEn;
+
+    // --- NEW: Populate the price element ---
+    const price = productData.price;
+    if (price && price !== '-') {
+      productPriceEl.textContent = `EGP ${price}`;
+      productPriceEl.style.display = 'block';
+    } else {
+      productPriceEl.style.display = 'none';
+    }
 
     const ingredientsText = productData[lang === 'ar' ? 'ingredientsAr' : 'ingredientsEn'] || '';
     if (ingredientsText && ingredientsText.trim() !== '' && ingredientsText.trim() !== '-') {
@@ -203,25 +218,20 @@ function initProductSheetLogic() {
 
     nutritionData.forEach(item => {
       const li = document.createElement('li');
-
-      // --- START OF FINAL MODIFICATION: Add units ---
       let unit = '';
-      if (item.value !== '-' && item.value) { // Only add units if there is a real value
+      if (item.value !== '-' && item.value) {
         const currentLang = document.documentElement.lang || 'en';
         switch (item.label) {
           case labels.fat:
           case labels.carbs:
           case labels.protein:
-            unit = currentLang === 'ar' ? ' جم' : ' g'; // جم = gram
+            unit = currentLang === 'ar' ? ' جم' : 'g';
             break;
           case labels.caffeine:
-            unit = currentLang === 'ar' ? ' ملجم' : ' mg'; // ملجم = milligram
+            unit = currentLang === 'ar' ? ' ملجم' : 'mg';
             break;
-          // No unit for calories
         }
       }
-      // --- END OF FINAL MODIFICATION ---
-
       const valueDisplay = item.value === '-' || !item.value ? '-' : `${item.value}${unit}`;
       li.innerHTML = `<span class="label">${item.label}</span><span class="value">${valueDisplay}</span>`;
       nutritionListEl.appendChild(li);
