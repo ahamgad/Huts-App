@@ -14,7 +14,9 @@ let userLang = localStorage.getItem("preferredLanguage") || (navigator.language.
 let allTranslations = {};
 let isProgrammaticScroll = false;
 let scrollTimeout;
-let intersectionObserver = null;
+
+// CORRECT WAY to create a global property on the window object
+window.intersectionObserver = null;
 
 // --- CORE FUNCTIONS ---
 
@@ -402,14 +404,6 @@ window.addEventListener("DOMContentLoaded", () => {
     initBackButton();
     initLogoTextVisibility();
 
-    if (document.querySelector(".menu-content")) {
-      initScrollSpy();
-      initManualScrollDetection();
-    }
-    if (typeof loadMenuData === "function") {
-      loadMenuData();
-    }
-
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
   });
@@ -441,6 +435,19 @@ window.addEventListener('pageshow', function (event) {
       if (langToggleBtn) {
         langToggleBtn.innerHTML = userLang === "ar" ? "English" : "العربية";
       }
+    }
+  }
+});
+
+// --- ADD THIS NEW LISTENER AT THE END OF scripts.js ---
+// This will run all menu-specific logic only after ALL resources (including images) are loaded.
+window.addEventListener("load", () => {
+  if (document.querySelector(".menu-content")) {
+    // These functions depend on the menu page structure
+    initScrollSpy();
+    initManualScrollDetection();
+    if (typeof loadMenuData === "function") {
+      loadMenuData();
     }
   }
 });
