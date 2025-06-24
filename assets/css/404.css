@@ -303,8 +303,8 @@ body.error {
 /* ================================================= */
 /* Responsive Behavior (Media Tag 800px) */
 /* ================================================= */
-@media (max-width: 800px) {
+@media (max-width: 650px) {
   .errorSVG {
-    width: 360px;
+    width: 100%;
   }
 }
