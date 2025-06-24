@@ -47,7 +47,7 @@ i {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 900;
+  z-index: 98;
   height: var(--header-height);
 }
 .site-header .container {
@@ -178,7 +178,7 @@ i {
   transition: 0.3s ease;
   padding: var(--body-padding-large);
   overflow-y: auto;
-  z-index: 9999;
+  z-index: 999;
 }
 .side-menu.open {
   inset-inline-end: 0;
@@ -440,7 +440,7 @@ html[dir="rtl"] .flippable-image {
   position: sticky;
   top: 0;
   background-color: var(--bg-secondary);
-  z-index: 35;
+  z-index: 99;
   display: flex;
   align-items: center;
   width: 100%;
@@ -1111,7 +1111,7 @@ html[dir="rtl"] .flippable-image {
   opacity: 0.9;
   animation: explode 1.6s ease-out forwards;
   /* جديد: التأكد من أنها في الطبقة الصحيحة */
-  z-index: -3;
+  z-index: 1;
 }
 .page-title {
   color: var(--color-black-400);
@@ -1135,6 +1135,7 @@ html[dir="rtl"] .flippable-image {
   align-items: center;
   transform: scale(0);
   opacity: 0;
+  z-index: 2;
 
   /* جديد: تحديد نوع وسرعة الانتقال (الأنيميشن) */
   /* cubic-bezier يعطي تأثيراً ارتدادياً جميلاً */
@@ -1171,12 +1172,12 @@ html[dir="rtl"] .flippable-image {
 
 /* تنسيق الصورة الثابتة (الوسطى) للتأكد من أنها في الأعلى */
 #spinner-center {
-  z-index: 2;
+  z-index: 4;
 }
 
 /* تنسيق الصورة الدوارة (الخلفية) مع مركز الدوران الصحيح */
 #spinner-wheel {
-  z-index: 1;
+  z-index: 3;
   /* هذا هو التعديل الأهم: تحديد نقطة الدوران بدقة */
   transform-origin: 50% 59.2%;
 }
@@ -1729,7 +1730,6 @@ html[dir="rtl"] .flippable-image {
     border-bottom: var(--border-style);
     background-color: var(--bg-primary);
     padding: 0 var(--body-padding-medium) 8px;
-    z-index: 901;
   }
   .site-header .container {
     padding: 0 var(--body-padding-medium);
