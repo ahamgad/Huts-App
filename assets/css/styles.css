@@ -621,7 +621,7 @@ html[dir="rtl"] .flippable-image {
   gap: 8px;
   padding: 8px 16px;
   width: 100%;
-  background-color: var(--color-orange-300-G);
+  background-color: var(--color-orange-300-G) !important;
   border-radius: var(--radius-medium);
   color: var(--color-orange-300);
   font-family: var(--font-cairo);
@@ -1856,6 +1856,40 @@ html[dir="rtl"] .flippable-image {
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/* Specific skeleton styles for the banner */
+.skeleton-banner {
+  display: block;
+  height: 185px; /* Adjust height to match your banner's final height */
+  border-radius: 16px;
+}
+
+/* Specific skeleton styles for the hint box */
+.product-details-hint.skeleton {
+  height: 45px; /* Adjust height to match your hint's final height */
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* When the 'loaded' class is added, reveal the content smoothly */
+.loaded {
+  background-color: transparent; /* Remove skeleton background */
+  transition: background-color 0.3s ease-in-out;
+}
+
+.loaded > * {
+  visibility: visible;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 .skeleton-tab {

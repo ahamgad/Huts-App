@@ -40,8 +40,14 @@ function renderSkeletonLoader() {
 function loadMenuData() {
   const menuContent = document.querySelector('.menu-content');
   if (menuContent) menuContent.classList.add('noscroll');
-  renderSkeletonLoader();
+
+  // The skeleton classes are now added by default in the HTML,
+  // so no need to call a function for them here.
+  // The CSS will handle their initial appearance.
+  renderSkeletonLoader(); // This handles the tabs and product list skeletons
+
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vROZEd2FRFZXsGihkUTQPCpBXMwwkMwBioYoemaBX1P8XYWhUQqpw4yA8s4E-plSlbPAxeb5i3bkFEU/pub?gid=0&single=true&output=csv";
+
   Papa.parse(SHEET_CSV_URL, {
     download: true,
     header: true,
@@ -53,10 +59,27 @@ function loadMenuData() {
         if (r.category_id) groupedData[r.category_id].push(r);
       });
       renderAll();
+
       const footer = document.querySelector('.menu-page-footer');
       if (footer) footer.style.display = 'flex';
+
       if (menuContent) menuContent.classList.remove('noscroll');
+
       initProductSheetLogic();
+
+      // --- NEW: Reveal the banner and hint after data is loaded ---
+      const banner = document.getElementById('menu-page-banner');
+      const hint = document.getElementById('product-details-hint');
+
+      if (banner) {
+        banner.classList.remove('skeleton', 'skeleton-banner');
+        banner.classList.add('loaded');
+      }
+      if (hint) {
+        hint.classList.remove('skeleton');
+        hint.classList.add('loaded');
+      }
+      // --- END OF NEW CODE ---
     },
     error: (err) => {
       console.error("CSV parse error:", err);

@@ -47,7 +47,8 @@
     <!-- Banners -->
     <section class="menu-page-banner">
       <!-- Offers Banner -->
-      <a href="../offers" onclick="trackEvent('Banners_Click', { cta_name: 'Offers' })">
+      <a href="../offers" onclick="trackEvent('Banners_Click', { cta_name: 'Offers' })" id="menu-page-banner"
+        class="skeleton skeleton-banner">
         <h3 data-i18n-key="menuOffersBannerT"></h3>
         <br />
         <h6 data-i18n-key="menuOffersBannerD"></h6>
@@ -57,7 +58,7 @@
     </section>
 
     <!-- Products list -->
-    <div class="product-details-hint">
+    <div class="product-details-hint skeleton" id="product-details-hint">
       <i class="fi fi-rr-comment-info"></i>
       <p data-i18n-key="menuHint"></p>
     </div>
