@@ -297,7 +297,7 @@ html[dir="rtl"] .flippable-image {
   gap: 8px;
   height: 100%;
   width: 100%;
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-primary);
   padding: 24px;
 }
 
