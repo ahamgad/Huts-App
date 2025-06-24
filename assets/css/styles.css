@@ -1697,6 +1697,7 @@ html[dir="rtl"] .flippable-image {
   /* The new offer price in purple */
   .offer-price {
     margin-top: 4px;
+    margin-inline-start: 8px;
     color: var(--color-primary-300);
     font-weight: 600;
   }

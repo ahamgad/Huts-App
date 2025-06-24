@@ -197,7 +197,7 @@ function initProductSheetLogic() {
     const originalPrice = productData.price;
     const offerPrice = productData.offer;
     if (offerPrice && offerPrice.trim() !== '' && offerPrice.trim() !== '-') {
-      productPriceEl.innerHTML = `<span class="original-price">${originalPrice}</span><span class="offer-price">${offerPrice} LE</span>`;
+      productPriceEl.innerHTML = `<span class="original-price" dir='ltr'>${originalPrice}</span><span class="offer-price">${offerPrice} LE</span>`;
       productPriceEl.style.display = 'block';
     } else if (originalPrice && originalPrice.trim() !== '' && originalPrice.trim() !== '-') {
       productPriceEl.innerHTML = `${originalPrice} LE`;
