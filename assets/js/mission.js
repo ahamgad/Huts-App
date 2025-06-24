@@ -54,10 +54,10 @@ const translations = {
 };
 
 
-// const delay = 86400; // Original Time: 24 hours
-// const finalDelay = 86400;
-const delay = 60; // Test Time: 5 minutes
-const finalDelay = 60;
+const delay = 86400; // Original Time: 24 hours
+const finalDelay = 86400;
+// const delay = 60; // Test Time: 5 minutes
+// const finalDelay = 60;
 
 const hutLat = 30.08865012314379; // Original Location
 const hutLng = 31.30396811084656;
