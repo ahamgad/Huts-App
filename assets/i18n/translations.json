@@ -47,9 +47,8 @@
     "missionInstr-1": "Allow location access when prompted",
     "missionInstr-2": "Be inside the Coffee Hut",
     "error404Title": "Oops!",
-    "error404SubTitle": "Page Not Found",
-    "error404Description": "This content took a coffee break",
-    "error404Button": "Go to Homepage",
+    "error404Description": "Something Broke",
+    "error404Button": "Go Home",
     "menuHint": "Click the product name to view more details"
   },
   "ar": {
@@ -100,8 +99,7 @@
     "missionInstr-1": "اسمح بالوصول إلى الموقع عندما يُطلب منك ذلك",
     "missionInstr-2": "كن داخل مقهى كوفي هت",
     "error404Title": "عفوًا!",
-    "error404SubTitle": "هذه الصفحة غير متوفرة",
-    "error404Description": "هذا المحتوى أخذ استراحة قهوة",
+    "error404SubTitle": "حدث خطأ",
     "error404Button": "الصفحة الرئيسية",
     "menuHint": "اضغط على اسم المنتج لعرض المزيد من التفاصيل"
   }

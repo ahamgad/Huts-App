@@ -19,9 +19,6 @@ body {
   display: flex;
   align-items: center;
 }
-body.error {
-  padding: var(--body-padding-large);
-}
 /* A more robust way to prevent background scroll */
 body.noscroll,
 html.noscroll {
@@ -740,51 +737,6 @@ html[dir="rtl"] .flippable-image {
   overflow-x: hidden;
   padding: 0 !important;
   display: block;
-}
-.main-container.error {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--body-padding-large) !important;
-  gap: 0 !important;
-  text-align: center;
-  background: var(--bg-primary);
-  border: var(--border-style);
-  border-radius: var(--radius-large);
-  img {
-    width: 120px;
-    margin-bottom: 16px;
-  }
-  h1 {
-    font-size: 3.5rem;
-    color: var(--color-primary-500);
-    font-family: var(--font-playpen);
-  }
-  h3 {
-    font-size: 1.25rem;
-    color: var(--color-black-500);
-    font-family: var(--font-cairo);
-    line-height: 1;
-    margin-top: 8px;
-  }
-  p {
-    font-size: 1rem;
-    color: var(--color-black-400);
-    line-height: normal;
-    font-family: var(--font-cairo);
-    margin: 8px 0 16px;
-  }
-  a {
-    font-family: var(--cta-font-family);
-    font-size: var(--cta-font-size);
-    font-weight: var(--cta-font-weight);
-    padding: var(--cta-padding);
-    border-radius: var(--cta-radius);
-    background: var(--color-primary-300);
-    border: none;
-    color: var(--color-black-100);
-    line-height: normal;
-  }
 }
 .main-content {
   width: 100%;
