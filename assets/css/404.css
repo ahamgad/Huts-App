@@ -39,16 +39,23 @@ body.error {
     font-weight: 400;
   }
   a {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     font-family: var(--cta-font-family);
-    font-size: 1.25rem;
-    font-weight: var(--cta-font-weight);
+    font-size: 1rem;
+    font-weight: 600;
     padding: var(--cta-padding);
     border-radius: var(--cta-radius);
-    /* background: var(--color-primary-300); */
     border: none;
     color: var(--color-primary-300);
     line-height: normal;
+    text-transform: uppercase;
     text-decoration: underline;
+  }
+  a i {
+    display: flex;
   }
 }
 
@@ -56,7 +63,7 @@ body.error {
   display: block;
   width: 550px;
   height: auto;
-  margin: 0 auto;
+  margin: 0 auto var(--body-padding-large);
 }
 .lines {
   fill: var(--color-primary-400);
@@ -298,6 +305,6 @@ body.error {
 /* ================================================= */
 @media (max-width: 800px) {
   .errorSVG {
-    width: 280px;
+    width: 360px;
   }
 }
