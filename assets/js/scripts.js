@@ -1,12 +1,4 @@
-// scripts.js - FINAL VERSION (Integrated Path Fixes)
-
-// =============================================
-// --- 1. DEFINE THE SITE'S BASE PATH ONCE ---
-// =============================================
-const isGitHub = window.location.hostname.includes('github.io');
-const repoName = '/Huts-App'; // Your repository name
-const siteBasePath = isGitHub ? repoName : '';
-// On GitHub, siteBasePath will be '/Huts-App'. On Live Server, it will be ''.
+// scripts.js
 
 // --- GA EVENT TRACKING FUNCTION ---
 function trackEvent(eventName, eventParams) {
@@ -107,20 +99,15 @@ function initManualScrollDetection() {
   container.addEventListener('touchstart', handleManualScroll, { passive: true });
 }
 
-// --- MODIFIED: includeHTML now uses the dynamic base path ---
 function includeHTML() {
   const includeEls = Array.from(document.querySelectorAll("[data-include]"));
   return Promise.all(
-    includeEls.map(el => {
-      const includePath = siteBasePath + el.getAttribute("data-include");
-      return fetch(includePath)
-        .then(r => {
-          if (!r.ok) throw new Error(`Failed to fetch partial: ${includePath}`);
-          return r.text()
-        })
+    includeEls.map(el =>
+      fetch(el.getAttribute("data-include"))
+        .then(r => r.text())
         .then(html => el.outerHTML = html)
-        .catch(err => console.error(err));
-    })
+        .catch(err => console.error("Include failed:", err))
+    )
   );
 }
 
@@ -145,26 +132,35 @@ function initLanguageToggle() {
   btn.addEventListener("click", () => {
     userLang = userLang === "en" ? "ar" : "en";
     localStorage.setItem("preferredLanguage", userLang);
+
     applyTranslations();
     applyDirection();
     btn.innerHTML = userLang === "ar" ? "English" : "العربية";
+
     if (typeof window.renderAll === "function") window.renderAll();
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
+
     if (typeof window.redrawSpinnerView === "function") {
       window.redrawSpinnerView();
     }
+
     trackEvent("Language_Toggle", { language_to: userLang });
   });
 }
 
-// --- MODIFIED: initMenuToggle now contains the robust z-index logic ---
+
 function initMenuToggle() {
   const menuToggle = document.querySelector(".menu-toggle");
   const sideMenu = document.querySelector(".side-menu");
 
-  if (!menuToggle || !sideMenu) return;
+  // --- CORRECTED: Only check for essential elements to prevent the function from exiting ---
+  if (!menuToggle || !sideMenu) {
+    // If we can't find the button or the menu, there's nothing to do.
+    return;
+  }
 
+  // These elements are optional and will be checked for later.
   const closeBtn = document.querySelector(".close-menu");
   const themeColorMeta = document.getElementById('theme-color-meta');
   const overlay = document.querySelector(".side-menu-overlay");
@@ -172,23 +168,48 @@ function initMenuToggle() {
 
   const openMenu = () => {
     sideMenu.classList.add("open");
+    // Only affect the overlay if it exists
     if (overlay) overlay.classList.add("open");
-    if (themeColorMeta) themeColorMeta.setAttribute('content', '#f8f9fa');
-    if (menuTabs) menuTabs.style.zIndex = 'auto'; // Force tabs behind overlay
+
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute('content', '#f8f9fa');
+    }
+
+    // Only affect menuTabs if it exists on the page
+    if (menuTabs) {
+      menuTabs.style.zIndex = 'auto';
+    }
+
     trackEvent("Menu_Toggle", { action: "open" });
   };
 
   const closeMenu = () => {
     sideMenu.classList.remove("open");
+    // Only affect the overlay if it exists
     if (overlay) overlay.classList.remove("open");
-    if (themeColorMeta) themeColorMeta.setAttribute('content', '#ffffff');
-    if (menuTabs) menuTabs.style.zIndex = ''; // Restore original z-index
+
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute('content', '#ffffff');
+    }
+
+    // Only affect menuTabs if it exists on the page
+    if (menuTabs) {
+      menuTabs.style.zIndex = '';
+    }
+
     trackEvent("Menu_Toggle", { action: "close" });
   };
 
+  // Now, we can safely add the event listener
   menuToggle.addEventListener("click", openMenu);
-  if (closeBtn) closeBtn.addEventListener("click", closeMenu);
-  if (overlay) overlay.addEventListener("click", closeMenu);
+
+  // Add listeners for other elements only if they exist
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeMenu);
+  }
+  if (overlay) {
+    overlay.addEventListener("click", closeMenu);
+  }
 
   document.addEventListener("click", (e) => {
     if (
@@ -213,50 +234,81 @@ function initMenuToggle() {
   });
 }
 
+/**
+ * Adjusts all paths for elements with the 'dynamic-path' class.
+ * This is for GitHub Pages deployment, where it adds the repo name prefix.
+ * It handles both `<a>` (href) and `<img>` (src) tags automatically.
+ */
+function adjustPathsForGitHubPages() {
+  const isGitHub = window.location.hostname.includes('github.io');
+  if (!isGitHub) return; // Do nothing if we're on a different server (like Live Server)
+
+  const repoName = '/Huts-App'; // Your repository name
+
+  // Select ALL elements that need path correction using a single class
+  document.querySelectorAll('.dynamic-path').forEach(el => {
+    // Determine which attribute to change: 'href' for links, 'src' for images
+    const attribute = (el.tagName === 'A') ? 'href' : 'src';
+    const currentPath = el.getAttribute(attribute);
+
+    // If the path exists, starts with '/', and doesn't already have the prefix...
+    if (currentPath && currentPath.startsWith('/') && !currentPath.startsWith(repoName)) {
+      // ...then add the prefix.
+      el.setAttribute(attribute, repoName + currentPath);
+    }
+  });
+}
+
 function highlightActiveMenu() {
-  // --- الخطوة 1: تأكد من أن هذا المحدد يجد الروابط ---
-  // --- الرجاء تعديل '.site-nav a, .side-menu a' إذا لزم الأمر ---
-  const navLinks = document.querySelectorAll('.site-nav a, .side-menu a');
-
-  if (navLinks.length === 0) {
-    console.error("Highlighting failed: Could not find any navigation links. Please check your CSS selector in highlightActiveMenu().");
-    return;
-  }
-
-  // --- الخطوة 2: تحديد "معرّف" الصفحة الحالية ---
-  // هذا الكود يستخرج آخر جزء من الرابط مثل "menu" أو "mission"
-  const pathParts = window.location.pathname.split('/').filter(part => part && part !== 'Huts-App');
-  let currentPageIdentifier = pathParts.length > 0 ? pathParts[pathParts.length - 1] : 'home';
-
-  // --- الخطوة 3: تحديد من هي الصفحة الرئيسية للقسم الحالي ---
-  // (مثال: صفحة "mission" تتبع قسم "games")
+  // 1. Define which sub-pages belong to which main navigation link
   const pageGroups = {
-    'games': ['mission', 'spinner'],
-    'menu': ['offers']
+    'menu': ['offers'], // The 'offers' page should highlight the 'menu' link
+    'games': ['mission', 'spinner'] // 'mission' or 'spinner' page highlights the 'games' link
+    // Add other groups here if needed
   };
 
+  // 2. Get a clean identifier for the CURRENT page
+  const currentPath = window.location.pathname;
+  // This gets the last part of the URL (e.g., "menu", "mission", or "Huts-App" for the homepage on GitHub)
+  let currentPageIdentifier = currentPath.replace(/\/$/, "").split("/").pop();
+
+  // Normalize the homepage identifier to be consistent
+  if (currentPageIdentifier === 'Huts-App' || currentPageIdentifier === '') {
+    currentPageIdentifier = 'home';
+  }
+
+  // 3. Determine the final target to highlight
+  //    (e.g., if we are on the "mission" page, the target should become "games")
   let targetIdentifier = currentPageIdentifier;
   for (const mainPage in pageGroups) {
     if (pageGroups[mainPage].includes(currentPageIdentifier)) {
-      targetIdentifier = mainPage;
+      targetIdentifier = mainPage; // Set the target to the main page of the group
       break;
     }
   }
 
-  // --- الخطوة 4: المرور على كل الروابط وتطبيق كلاس "active" ---
-  navLinks.forEach(link => {
-    const linkHref = link.getAttribute('href');
-    let linkIdentifier;
+  // 4. Loop through all navigation links to find the match
+  document.querySelectorAll(".site-nav a, .side-menu a").forEach(link => {
+    // 5. Get a clean identifier for EACH LINK
+    // We use the full href to handle both local and deployed environments correctly
+    const linkPath = new URL(link.href).pathname;
+    let linkIdentifier = linkPath.replace(/\/$/, "").split("/").pop();
 
-    // تحديد "معرّف" كل رابط
-    if (linkHref === '/' || linkHref === 'index.html' || linkHref === './' || linkHref === '/Huts-App/') {
+    // Normalize the homepage link's identifier
+    if (linkIdentifier === 'Huts-App' || linkIdentifier === '') {
       linkIdentifier = 'home';
-    } else {
-      // استخراج المعرف من روابط مثل "menu/" أو "games/"
-      linkIdentifier = linkHref.replace(/\/$/, "").split("/").pop();
     }
 
-    // المقارنة النهائية
+    // In the HTML for the homepage link, we use href="/".
+    // This results in an empty identifier, so we handle it explicitly.
+    // The link to the homepage should point to "/" in the header.html partial.
+    // e.g., <a href="/">Home</a>
+    if (link.getAttribute('href') === '/') {
+      linkIdentifier = 'home';
+    }
+
+
+    // 6. Compare the page's target identifier with the link's identifier
     if (linkIdentifier === targetIdentifier) {
       link.classList.add('active');
     } else {
@@ -265,18 +317,24 @@ function highlightActiveMenu() {
   });
 }
 
-
 const copyButtons = document.querySelectorAll(".copy-button");
 copyButtons.forEach(button => {
   button.addEventListener("click", function (event) {
     event.preventDefault();
     const textToCopy = this.querySelector(".text-to-copy").innerText;
-    navigator.clipboard.writeText(textToCopy)
+    navigator.clipboard
+      .writeText(textToCopy)
       .then(() => {
         this.classList.add("copied");
-        setTimeout(() => { this.classList.remove("copied"); }, 1000);
+        this.blur();
+        setTimeout(() => {
+          this.classList.remove("copied");
+        }, 1000);
       })
-      .catch(err => console.error("فشل في نسخ النص: ", err));
+      .catch(err => {
+        console.error("فشل في نسخ النص: ", err);
+        this.blur();
+      });
   });
 });
 
@@ -284,7 +342,7 @@ function initBackButton() {
   const backBtn = document.getElementById('back-btn');
   if (!backBtn) return;
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const isHomePage = document.body.classList.contains('is-homepage');
+  const isHomePage = document.querySelector('.home-content');
   if (isTouchDevice && !isHomePage) {
     backBtn.classList.add('visible');
     backBtn.addEventListener('click', (e) => {
@@ -298,7 +356,7 @@ function initLogoTextVisibility() {
   const logoText = document.querySelector('.logo-text');
   if (!logoText) return;
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const isHomePage = document.body.classList.contains('is-homepage');
+  const isHomePage = document.querySelector('.home-content');
   if (isTouchDevice && !isHomePage) {
     logoText.classList.add('hidden-on-mobile');
   }
@@ -306,16 +364,25 @@ function initLogoTextVisibility() {
 
 // --- BOOT SEQUENCE ---
 window.addEventListener("DOMContentLoaded", () => {
-  // Check for homepage and add class
-  const homePath = siteBasePath + '/';
-  const homePathWithIndex = siteBasePath + '/index.html';
-  if (window.location.pathname === homePath || window.location.pathname === homePathWithIndex) {
+  if (window.location.pathname === '/Huts-App/' || window.location.pathname === '/Huts-App/index.html' || window.location.pathname === '/') {
     document.body.classList.add('is-homepage');
   }
 
   includeHTML().then(() => {
-    // Fetch translations using the base path
-    fetch(`${siteBasePath}/assets/i18n/translations.json`)
+    // ==================================================================
+    // --- START OF FIX: Dynamic path for translations.json ---
+    // ==================================================================
+
+    // Determine the correct base path depending on the page depth.
+    // This works for both Live Server (root is '/') and GitHub Pages (root is '/Huts-App/').
+    const pathSegments = window.location.pathname.split('/').filter(segment => segment).length;
+    const isGitHubPages = window.location.hostname.includes('github.io');
+
+    // On GitHub, a sub-page has more than 1 segment. On Live Server, a sub-page has more than 0 segments.
+    const isSubPage = isGitHubPages ? pathSegments > 1 : pathSegments > 0;
+    const basePath = isSubPage ? '../' : '';
+
+    fetch(`${basePath}assets/i18n/translations.json`)
       .then(res => res.json())
       .then(data => {
         allTranslations = data;
@@ -323,29 +390,30 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .catch(err => console.error("Error loading translations:", err));
 
-    // --- NEW: This function no longer needed as paths are now corrected by JS ---
-    // adjustPathsForGitHubPages(); 
+    // ==================================================================
+    // --- END OF FIX ---
+    // ==================================================================
 
-    // Initialize all modules
+    adjustPathsForGitHubPages();
     initLanguageToggle();
+    highlightActiveMenu();
     initMenuToggle();
     initIframeSkeletons();
     initBackButton();
     initLogoTextVisibility();
-    highlightActiveMenu();
 
     if (document.querySelector(".menu-content")) {
       initScrollSpy();
       initManualScrollDetection();
-      if (typeof loadMenuData === "function") {
-        loadMenuData();
-      }
     }
+    if (typeof loadMenuData === "function") {
+      loadMenuData();
+    }
+
     if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
     if (document.getElementById("events-wrapper")) loadDynamicForm("events");
   });
 });
-
 
 // --- PAGE STATE CORRECTION ON BACK/FORWARD NAVIGATION ---
 window.addEventListener('pageshow', function (event) {
