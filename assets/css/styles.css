@@ -597,6 +597,29 @@ html[dir="rtl"] .flippable-image {
   margin-left: 4px;
   color: var(--color-black-400);
 }
+.product-details-hint {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 8px 16px;
+  width: 100%;
+  background-color: var(--color-orange-300-G);
+  border-radius: var(--radius-medium);
+  color: var(--color-orange-300);
+  font-family: var(--font-cairo);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: var(--body-padding-medium);
+  margin-top: -4px;
+  p {
+    font-weight: 400;
+  }
+  i {
+    display: flex;
+  }
+}
 .menu-page-footer {
   display: none;
   flex-direction: column;
@@ -1730,6 +1753,10 @@ html[dir="rtl"] .flippable-image {
     border-bottom: var(--border-style);
     background-color: var(--bg-primary);
     padding: 0 var(--body-padding-medium) 8px;
+    z-index: 0;
+  }
+  .product-details-hint {
+    display: flex;
   }
   .site-header .container {
     padding: 0 var(--body-padding-medium);

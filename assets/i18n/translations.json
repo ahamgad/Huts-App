@@ -49,7 +49,8 @@
     "error404Title": "Oops!",
     "error404SubTitle": "Page Not Found",
     "error404Description": "This content took a coffee break",
-    "error404Button": "Go to Homepage"
+    "error404Button": "Go to Homepage",
+    "menuHint": "Click the product name to view more details"
   },
   "ar": {
     "logoText": "كوفي هت",
@@ -101,6 +102,7 @@
     "error404Title": "عفوًا!",
     "error404SubTitle": "هذه الصفحة غير متوفرة",
     "error404Description": "هذا المحتوى أخذ استراحة قهوة",
-    "error404Button": "الصفحة الرئيسية"
+    "error404Button": "الصفحة الرئيسية",
+    "menuHint": "اضغط على اسم المنتج لعرض المزيد من التفاصيل"
   }
 }
