@@ -582,21 +582,37 @@ html[dir="rtl"] .flippable-image {
   font-weight: 400;
   text-transform: uppercase;
 }
-.product-card p {
+
+.product-price {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Aligns price to the right */
+  gap: 8px; /* Adds a small space between the two prices */
+  flex-wrap: wrap; /* Allows prices to wrap on small screens if needed */
   color: var(--color-black-500);
   font-family: var(--font-cairo);
   font-size: 0.875rem;
   font-weight: 400;
 }
-
-.product-card p::after {
+.product-price::after {
   content: "LE";
   vertical-align: super;
   font-size: 0.625rem;
   font-weight: 600;
-  margin-left: 4px;
+  margin-inline-start: -4px;
   color: var(--color-black-400);
 }
+/* The original price, now with a strikethrough */
+.original-price {
+  text-decoration: line-through;
+  color: var(--color-black-500);
+}
+/* The new offer price in purple */
+.offer-price {
+  color: var(--color-primary-300);
+  font-weight: 600;
+}
+
 .product-details-hint {
   display: none;
   flex-direction: row;
@@ -1661,8 +1677,8 @@ html[dir="rtl"] .flippable-image {
 .sheet-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 var(--body-padding-medium) 8px;
+  align-items: flex-start;
+  padding: 8px var(--body-padding-medium) 8px;
   border-bottom: var(--border-style);
   position: sticky;
   gap: var(--body-padding-medium);
@@ -1672,7 +1688,18 @@ html[dir="rtl"] .flippable-image {
 .product-title-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  /* gap: 8px; */
+  .original-price {
+    margin-top: 4px;
+    text-decoration: line-through;
+    color: var(--color-black-400);
+  }
+  /* The new offer price in purple */
+  .offer-price {
+    margin-top: 4px;
+    color: var(--color-primary-300);
+    font-weight: 600;
+  }
 }
 .product-title-wrapper h3 {
   margin: 0;
@@ -1680,13 +1707,14 @@ html[dir="rtl"] .flippable-image {
   font-weight: 600;
   color: var(--color-black-400);
   font-family: var(--font-cairo);
-  /* line-height: 1; */
+  line-height: 1;
 }
 .product-title-wrapper p {
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: var(--color-primary-400);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-black-400);
   font-family: var(--font-cairo);
+  margin-top: 4px;
 }
 
 .close-sheet {

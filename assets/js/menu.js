@@ -115,6 +115,9 @@ function renderTabs(data, lang) {
   });
 }
 
+/**
+ * Renders product cards with conditional logic for offer prices.
+ */
 function renderProducts(data, lang) {
   const list = document.getElementById("product-list");
   list.innerHTML = "";
@@ -134,10 +137,10 @@ function renderProducts(data, lang) {
     productsDiv.className = "products";
     items.forEach((r) => {
       const name = lang === "ar" ? r.item_ar : r.item_en;
-      const price = r.price;
       const card = document.createElement("div");
       card.className = "product-card product-item";
 
+      // Add all data attributes for the bottom sheet
       card.setAttribute('data-name-en', r.item_en ?? '');
       card.setAttribute('data-name-ar', r.item_ar ?? '');
       card.setAttribute('data-ingredients-en', r.ingredients_en ?? '');
@@ -147,11 +150,37 @@ function renderProducts(data, lang) {
       card.setAttribute('data-carbs', r.carbs_g ?? '-');
       card.setAttribute('data-protein', r.protein_g ?? '-');
       card.setAttribute('data-caffeine', r.caffeine_mg ?? '-');
-
-      // --- NEW: Add price to data attributes ---
       card.setAttribute('data-price', r.price ?? '-');
+      // --- NEW: Add the offer price to the dataset as well ---
+      card.setAttribute('data-offer', r.offer ?? '-');
 
-      card.innerHTML = `<h3>${name}</h3><p>EGP ${price}</p>`; // Added EGP for clarity here too
+      // --- MODIFIED: Conditional price rendering logic ---
+      let priceHTML = '';
+      const originalPrice = r.price;
+      const offerPrice = r.offer;
+
+      // Check if offerPrice exists and is not a placeholder like '-'
+      if (offerPrice && offerPrice.trim() !== '' && offerPrice.trim() !== '-') {
+        // If there's an offer, show both prices
+        priceHTML = `
+          <span class="original-price">${originalPrice}</span>
+          <span class="offer-price">${offerPrice}</span>
+        `;
+      } else {
+        // If there's no offer, show only the original price
+        priceHTML = `${originalPrice}`;
+      }
+
+      card.innerHTML = `
+        <div class="product-info">
+            <h3>${name}</h3>
+        </div>
+        <div class="product-price">
+            ${priceHTML}
+        </div>
+      `;
+      // --- END OF MODIFICATION ---
+
       productsDiv.append(card);
     });
     section.append(productsDiv);
@@ -159,8 +188,9 @@ function renderProducts(data, lang) {
   });
 }
 
+
 // =============================================
-// --- NUTRITION BOTTOM SHEET LOGIC ---
+// --- NUTRITION BOTTOM SHEET LOGIC (with Offer Price) ---
 // =============================================
 function initProductSheetLogic() {
   const sheetLabels = {
@@ -175,9 +205,7 @@ function initProductSheetLogic() {
   if (!menuContainer || !sheet || !overlay || !closeBtn) return;
 
   const productNameEl = document.getElementById('sheet-product-name');
-  // --- NEW: Select the new price element ---
   const productPriceEl = document.getElementById('sheet-product-price');
-
   const ingredientsWrapperEl = document.getElementById('sheet-ingredients-wrapper');
   const productIngredientsEl = document.getElementById('sheet-product-ingredients');
   const nutritionListEl = document.getElementById('sheet-nutrition-list');
@@ -188,17 +216,32 @@ function initProductSheetLogic() {
     const lang = document.documentElement.lang || 'en';
     const labels = sheetLabels[lang];
 
+    // Populate product name
     productNameEl.textContent = productData[lang === 'ar' ? 'nameAr' : 'nameEn'] || productData.nameEn;
 
-    // --- NEW: Populate the price element ---
-    const price = productData.price;
-    if (price && price !== '-') {
-      productPriceEl.textContent = `EGP ${price}`;
+    // --- START OF MODIFICATION: Conditional Price and Offer Display ---
+    const originalPrice = productData.price;
+    const offerPrice = productData.offer;
+
+    // Check if a valid offer price exists
+    if (offerPrice && offerPrice.trim() !== '' && offerPrice.trim() !== '-') {
+      // If there's an offer, show both prices using the same CSS classes
+      productPriceEl.innerHTML = `
+        <span class="original-price">${originalPrice}</span>
+        <span class="offer-price">${offerPrice} LE</span>
+      `;
+      productPriceEl.style.display = 'block';
+    } else if (originalPrice && originalPrice.trim() !== '' && originalPrice.trim() !== '-') {
+      // If there's no offer, show only the original price
+      productPriceEl.innerHTML = `${originalPrice} LE`;
       productPriceEl.style.display = 'block';
     } else {
+      // If no price at all, hide the element
       productPriceEl.style.display = 'none';
     }
+    // --- END OF MODIFICATION ---
 
+    // Conditionally show/hide ingredients
     const ingredientsText = productData[lang === 'ar' ? 'ingredientsAr' : 'ingredientsEn'] || '';
     if (ingredientsText && ingredientsText.trim() !== '' && ingredientsText.trim() !== '-') {
       ingredientsWrapperEl.style.display = 'block';
@@ -208,6 +251,7 @@ function initProductSheetLogic() {
       ingredientsWrapperEl.style.display = 'none';
     }
 
+    // Populate nutrition list
     nutritionTitleEl.textContent = labels.nutrition;
     nutritionListEl.innerHTML = '';
     const nutritionData = [
@@ -225,10 +269,10 @@ function initProductSheetLogic() {
           case labels.fat:
           case labels.carbs:
           case labels.protein:
-            unit = currentLang === 'ar' ? ' جم' : 'g';
+            unit = currentLang === 'ar' ? ' جم' : ' g';
             break;
           case labels.caffeine:
-            unit = currentLang === 'ar' ? ' ملجم' : 'mg';
+            unit = currentLang === 'ar' ? ' ملجم' : ' mg';
             break;
         }
       }
@@ -236,6 +280,8 @@ function initProductSheetLogic() {
       li.innerHTML = `<span class="label">${item.label}</span><span class="value">${valueDisplay}</span>`;
       nutritionListEl.appendChild(li);
     });
+
+    // Show the sheet
     sheet.classList.add('is-open');
     overlay.classList.add('is-open');
     document.body.classList.add('noscroll');
