@@ -47,6 +47,51 @@
 
   <!-- Main JavaScript -->
   <script src="assets/js/scripts.js" defer></script>
+  <script>includeHTML().then(() => {
+      // --- START OF FIX for 404 page translations ---
+
+      // 1. Dynamically determine the absolute base path for assets.
+      const isGitHub = window.location.hostname.includes('github.io');
+      const repoName = '/Huts-App';
+      const siteBasePath = isGitHub ? repoName : '';
+
+      // 2. Construct the absolute path to the translations file.
+      const translationsPath = `${siteBasePath}/assets/i18n/translations.json`;
+
+      // 3. Use the new absolute path in the fetch call.
+      fetch(translationsPath)
+        .then(res => {
+          if (!res.ok) throw new Error(`Failed to fetch translations from ${translationsPath}`);
+          return res.json();
+        })
+        .then(data => {
+          allTranslations = data;
+          applyTranslations();
+        })
+        .catch(err => console.error(err));
+
+      // --- END OF FIX ---
+
+
+      // The rest of the functions will now run correctly
+      initLanguageToggle();
+      highlightActiveMenu();
+      initMenuToggle();
+      initIframeSkeletons();
+      initBackButton();
+      initLogoTextVisibility();
+
+      if (document.querySelector(".menu-content")) {
+        initScrollSpy();
+        initManualScrollDetection();
+      }
+      if (typeof loadMenuData === "function") {
+        loadMenuData();
+      }
+
+      if (document.getElementById("feedback-wrapper")) loadDynamicForm("feedback");
+      if (document.getElementById("events-wrapper")) loadDynamicForm("events");
+    });</script>
 </body>
 
 </html>
